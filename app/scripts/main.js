@@ -1,5 +1,10 @@
 import Scanner from './scanner';
+import FileInput from './fileInput';
 
 document.addEventListener('DOMContentLoaded', ()=>{
-	new Scanner('#scanner');
+	var glitchScanner = new Scanner('#scanner');
+	var fileInput = new FileInput('#img_upload');
+		
+	fileInput.onFileChanged.add( ( file ) => { glitchScanner.addFile(file) });
+
 });	
