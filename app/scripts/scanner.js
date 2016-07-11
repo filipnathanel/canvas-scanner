@@ -1,58 +1,58 @@
 import * as utils from './utils/utils';
+import Globals from './globals';
+
+import ScanArea from './scanArea';
+import ScanResult from './scanResult';
+
+import XYController from './xyController/xyController';
 
 export default class Scanner {
 
 	constructor(scanner){
 		
-		//scanner
+		// wrap div
 		this.$scanner = utils.getEl(scanner);
-		this.context = this.$scanner.getContext('2d');
-		//scanned
-		this.$scan = utils.getEl('#scan');
-		this.scanContext = this.$scan.getContext('2d');
+		this.scanArea = new ScanArea('#scan-area', this.$scanner);
+		this.scanResult = new ScanResult('#scan-result', this.$scanner);
+
 		this.$scanButton = utils.getEl('#start_scan');
+
+		this.xController = new XYController('#x-controller');
+		// console.log(this.xController);
 		
 		this.imageLoaded = false;
 
 		this.file = {};
 
-		this.initEvents();
+		this.activate();
 
 	}
 
+	activate(){
+		this.initEvents();
+	}
+
+	// events initialisation
 	initEvents(){
 
 		this.$scanner.addEventListener('imageUpdate', (e) => {this.onImageUpdated(e)});
-		this.$scanButton.addEventListener('click',(e) => {this.onScanClick(e)})
-	}
+		this.$scanButton.addEventListener('click', (e) => {this.onScanClick(e)});
 
+		Globals.onResize.add( () => { this.scanArea.redraw() } );
+	}
 
 	onImageUpdated(e){
 
+		this.scanArea.image = null;
+		this.scanArea.context.clearRect(0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height);
+
 		var file = e.detail.file;
-
-		this.loadFileToScanner(file);
-
+		this.scanArea.loadFile(file);
 	}
 
-	loadFileToScanner(file){
-		var fr = new FileReader();
-
-		fr.addEventListener('load', (e) => {
-			var rawImage = e.target.result;
-			var image = new Image();
-			image.src = rawImage;
-			this.$scanner.width = image.width;
-			this.$scanner.height = image.height;
-			this.context.drawImage(image,0,0);
-			this.imageLoaded = true;
-		});
-
-		fr.readAsDataURL(file);
-	}
-
+	// scan trigger
 	onScanClick(e){
-		if(this.imageLoaded === true){
+		if( this.scanArea.imageLoaded === true ){
 			this.scan();
 		}else{
 			console.log('no image present in the scanner');
@@ -62,37 +62,51 @@ export default class Scanner {
 
 	scan(){
 
+		var self = this;
+
 		var start = null;
-		var duration = 2000;
-		
-		var self = this; 
-		
+		var duration = 1000;
+
+		var currentStep = 0;
+		var newStep = 0;
+
 		function scanLoop(timestamp){
 
 			if (!start) start = timestamp;
-			var progress = timestamp - start;
-			// console.log(progress);
-			
-			// console.log(progress/duration);
-			var currentStep = (progress / duration) * self.$scanner.width;
-			currentStep = currentStep > 0 ? currentStep : 1 ; 
+			var progress = ((timestamp - start) / duration);
 
-			var scanned = self.context.getImageData(0,0, currentStep, self.$scanner.height);
-			console.log(scanned);
-			self.scanContext.putImageData(scanned,0,0);
+			// here add the movement of scanArea Image;
 
-			if ( progress < duration ){
+			newStep = progress * self.scanArea.canvas.width;
+
+			var stepsDiff = newStep - currentStep;
+			console.log('stepsDiff: ' + stepsDiff );
+			if (currentStep > 0){
+				var scanned = self.scanArea.context.getImageData(currentStep, 0, newStep, self.scanArea.canvas.height);
+				self.scanResult.context.putImageData(scanned, currentStep, 0);
+			}
+
+			currentStep = newStep;
+
+			if ( progress < 1 ){
 				window.requestAnimationFrame(scanLoop);
 			}
 
 		}
 
 		window.requestAnimationFrame(scanLoop);
-
+		// 
+		// one of the ways to approach it is to scan every pixel and the other to scan in batches.
+		// everypixel approach would be time independent and reliant only on comp performance,
+		// whereas the batch approach would need to scan 1 px fer animation Frame therefore would limit our speed to ~60px per second.
+		// I wil first go with the 1 px approach as it seems more bulletproof.
 
 	}
 
-
+	/**
+	 * Interface method
+	 * @param {File} file supplied by external input handler 	
+	 */
 	addFile(file){
 
 		var addFileEvent = new CustomEvent('imageUpdate', {
@@ -103,3 +117,4 @@ export default class Scanner {
 
 	}
 }
+

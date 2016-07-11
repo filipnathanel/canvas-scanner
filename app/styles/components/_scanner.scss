@@ -1,0 +1,20 @@
+.scanner{
+	
+}
+	.scan-displays{
+		position: relative;
+		canvas{
+			display:block;
+		}
+	}
+	.scan-area{
+		border-bottom: 1px solid #777;
+	}
+	.scan-result{
+		position: absolute;
+		width:30%;
+		bottom:0;
+		right:0;
+		background-color: #fff;
+		border:1px solid #777;
+	}

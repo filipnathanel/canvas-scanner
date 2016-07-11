@@ -57,7 +57,7 @@ export function getEl(el, context = document){
 
     if (typeof el === 'string'){
         if(el.indexOf('#') == 0){
-            return context.getElementById(el.substr(1));
+            return document.getElementById(el.substr(1));
         }else{
             return context.querySelector(el);
         }

@@ -26,17 +26,22 @@
     
     
 
-<h1>This is scanner</h1>
+<div class="scanner">
+	<div class="scan-displays">
+		<canvas class="scan-area" id="scan-area"></canvas>
 
-<canvas id="scanner"></canvas>
+		<canvas class="scan-result" id="scan-result"></canvas>
+	</div>
+	<form>
+		<input type="file" name="testImg" id="img_upload">
+	</form>
 
-<form>
-	<input type="file" name="testImg" id="img_upload">
-</form>
+	<button id="start_scan">Start Scan</button>
+</div>
 
-<button id="start_scan">Start Scan</button>
-
-<canvas id="scan"></canvas>
+<div class="xy-controller" id="x-controller">
+	<canvas></canvas>
+</div>
 
 
     

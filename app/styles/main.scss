@@ -1,6 +1,10 @@
 // bower:scss
 // endbower
 
+@import 'bower_components/normalize-scss/_normalize';
+
+@import 'components/components';
+
 body {
   background: #fafafa;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
