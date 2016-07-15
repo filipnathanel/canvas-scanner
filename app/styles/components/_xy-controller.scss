@@ -3,4 +3,11 @@
 	background-color: #ccc;
 	border: #777;
 	min-height: 100px;
+
+	svg{
+		display:block;
+		border:1px solid #333;
+		width:100%;
+		height:100%;
+	}
 }

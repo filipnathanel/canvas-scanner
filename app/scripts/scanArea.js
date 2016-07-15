@@ -43,7 +43,7 @@ export default class ScanArea {
 			this.context.drawImage(image, (this.canvas.width - image.width) / 2, (this.canvas.height - image.height) / 2);
 			this.imageLoaded = true;
 
-			setTimeout( () => { this.moveImage() }, 1000);
+			// setTimeout( () => { this.moveImage() }, 1000);
 		});
 
 		fr.readAsDataURL(file);
@@ -59,11 +59,13 @@ export default class ScanArea {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 	
-	moveImage(){
-		// if ( this.image ){
-		// 	this.clear();
-		// 	this.context.drawImage( this.image, (this.canvas.width - this.image.width), (this.canvas.height - this.image.height) );
-		// }
+	moveImage(progress){
+		
+		// var c = this.canvas.width * progress / this.canvas.width ;
+		// console.log(c);
+		this.clear();
+		this.context.drawImage( this.image, (this.canvas.width*progress*2 - this.image.width), (this.canvas.height - this.image.height) );
+		
 	}
 
 

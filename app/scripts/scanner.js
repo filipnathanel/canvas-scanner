@@ -65,7 +65,7 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 1000;
+		var duration = 10000;
 
 		var currentStep = 0;
 		var newStep = 0;
@@ -75,16 +75,21 @@ export default class Scanner {
 			if (!start) start = timestamp;
 			var progress = ((timestamp - start) / duration);
 
+			self.xController.getValueAtPercent(progress);
+
+
+
 			// here add the movement of scanArea Image;
 
 			newStep = progress * self.scanArea.canvas.width;
 
 			var stepsDiff = newStep - currentStep;
-			console.log('stepsDiff: ' + stepsDiff );
+			// console.log('stepsDiff: ' + stepsDiff );
 			if (currentStep > 0){
 				var scanned = self.scanArea.context.getImageData(currentStep, 0, newStep, self.scanArea.canvas.height);
 				self.scanResult.context.putImageData(scanned, currentStep, 0);
 			}
+			// self.scanArea.moveImage(progress);
 
 			currentStep = newStep;
 
