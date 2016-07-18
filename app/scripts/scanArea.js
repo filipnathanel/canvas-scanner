@@ -59,13 +59,16 @@ export default class ScanArea {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 	
-	moveImage(progress){
+	moveImage(xVal){
 		
 		// var c = this.canvas.width * progress / this.canvas.width ;
 		// console.log(c);
-		this.clear();
-		this.context.drawImage( this.image, (this.canvas.width*progress*2 - this.image.width), (this.canvas.height - this.image.height) );
-		
+		if (xVal){
+			this.clear();
+			this.context.drawImage( this.image, (this.canvas.width - this.image.width ) * xVal, (this.canvas.height - this.image.height) / 2 );
+		}
+		// rozpietosc od 0 do this.canvas.width - this.image.width
+		// albo this.canvas.width - this.image.width
 	}
 
 

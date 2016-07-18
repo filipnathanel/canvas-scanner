@@ -17,9 +17,10 @@ export default class XYController{
 		this.$svg = utils.getEl('svg', this.$el);
 
 		this.svgWidth = this.$svg.width.baseVal.value;
+		this.svgHeight = this.$svg.height.baseVal.value;
 
 
-		this.points2 = new PathData();
+		this.pathData = new PathData( this.$svg );
 		// this.chart = new Chart();
 		/*
 		The use
@@ -31,57 +32,44 @@ export default class XYController{
 		this.points = utils.SortedArray.comparing( (item) => {return item.options.cx;}, []);
 		this.paths = [];
 
-		console.log(this.$svg);
+		// console.log(this.$svg);
 
 		this.init();
 		this.initEvents();
 
-		console.log(this.points);
+		console.log(this.$svg);
 
 	}
 
 	init(){
 
-		this.addPoint(0,20);
-		this.addPoint(40,100);
-		this.addPoint(this.svgWidth, 40);
+		this.addPoint(0,this.svgHeight/2);
+		// this.addPoint(40,100);
+		this.addPoint(this.svgWidth, this.svgHeight/2);
 
-		this.connectPoints();
+		// this.connectPoints();
 
 	}
 
 	addPoint(x, y){
-
-		var point = new Circle({
-			cx: x,
-			cy: y,
-			r: 4,
-			fill: 'red'
-		}, this.$svg);
-
-		this.points.insert(point);
-
-		this.connectPoints();
-
-		/*
-		this.PathData.insert(new PathPoint(x,y));
-		 */
-
+		this.pathData.addPoint(x, y);
+		// this.connectPoints();
 	}
 
 	connectPoints(){
 
-		var len = this.points.array.length;
+		var len = this.pathData.data.array.length;
 		var loopTo = len -1;
 
+		console.log(this.pathData)
 		if (len > 1){
 
-			// this.points.array.forEach( (point) => {
+			// this.pathData.data.forEach( (point) => {
 			
 			// do some shit for every point but the last one
 			for (var i = 0; i < loopTo; i++) {
 
-				var d = `M${this.points.array[i].options.cx} ${this.points.array[i].options.cy} L${this.points.array[i+1].options.cx} ${this.points.array[i+1].options.cy} Z`;
+				var d = `M${this.pathData.data.array[i].x} ${this.pathData.data.array[i].y} L${this.pathData.data.array[i+1].x} ${this.pathData.data.array[i+1].y} Z`;
 
 				var path = new Path({
 					'd':d,
@@ -104,12 +92,45 @@ export default class XYController{
 		// simply calculate the x coordinate at given x percent
 		var currentX = this.svgWidth * percent < this.svgWidth ? this.svgWidth * percent : this.svgWidth ;
 		
-		// var pth = this.paths[0].el;
+		var currentPath = this.pathData.getPathAtX(currentX);
+		// var pth = this.pathData.el;
+		
+		// console.log(percent);
 		// console.log(currentX);
-		// console.log(pth);
-		// var currentWut =  pth.getPointAtLength(currentX) ;
+		// console.log( this.pathData );
 
-		this.addPoint(currentWut.x, currentWut.y);
+		var currentPathIndex = this.pathData.data.search(currentPath),
+			nextPathIndex = currentPathIndex + 1;
+
+		// to bedzie do sfixowania dla ostatniego elementu
+		// no i wogle trzeba ta metode bedzie zoptymalizować;
+		if (this.pathData.data.array[nextPathIndex]){
+			var xWidth = this.pathData.data.array[nextPathIndex].x - currentPath.x;
+		}
+
+		var relativeX = currentX - currentPath.x;
+		var xPercent = relativeX / xWidth;
+
+		var paath = this.pathData.data.array[currentPathIndex].path;
+		if (paath){
+			// we divide it by two because getTotalLength returns double for single segment patches
+			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() / 2 * xPercent);
+			
+			// console.log(coords);
+			var point = new Circle({
+				cx: coords.x,
+				cy: coords.y,
+				r: 2,
+				fill: 'yellow'
+			}, this.$svg);
+
+			return coords.y / this.svgHeight;
+		}
+
+
+		// console.log(xPercent);
+
+
 	}
 
 
