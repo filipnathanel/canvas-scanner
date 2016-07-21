@@ -78,20 +78,29 @@ export default class Scanner {
 			var xVal = self.xController.getValueAtPercent(progress);
 
 			// I DUNNO WHY DIVIDE BY 2 BUT IT SEEMS TO WORK CORRECTLY :/
-			
-			newStep = progress/2 * self.scanArea.canvas.width;
-			console.log('scanPointStart: ' + currentStep);
-			console.log('scanPointEnd: ' + newStep);
-			// console.log(currentStep);
+			newStep = progress * self.scanArea.canvas.width;
 
 			var stepsDiff = newStep - currentStep;
-			// console.log('stepsDiff: ' + stepsDiff );
-			if (currentStep > 20){
-				var scanned = self.scanArea.context.getImageData(currentStep, 0, newStep, self.scanArea.canvas.height);
-				self.scanResult.context.putImageData(scanned, currentStep, 0);
+			if (currentStep > 0){
+				var scanned = self.scanArea.context.getImageData(
+					currentStep, // dx
+					0, // dy
+					stepsDiff, // width
+					self.scanArea.canvas.height // height
+				);
+
+				self.scanResult.context.putImageData(
+					scanned,
+					currentStep, 
+					0, 
+					0, 
+					0, 
+					scanned.width, 
+					scanned.height
+				);
 			}
 
-			console.log(xVal);
+			// console.log(xVal);
 			self.scanArea.moveImage(xVal);
 
 			currentStep = newStep;
