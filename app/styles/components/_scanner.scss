@@ -10,6 +10,15 @@
 	.scan-area{
 		border-bottom: 1px solid #777;
 	}
+		.scan-indicator{
+			position: absolute;
+			top:0;
+			height:100%;
+			width:2px;
+			background-color:yellow;
+			left:0;
+			border-right: 1px solid blue;
+		}
 	.scan-result{
 		position: absolute;
 		width:30%;

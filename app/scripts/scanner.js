@@ -18,6 +18,8 @@ export default class Scanner {
 		this.$scanButton = utils.getEl('#start_scan');
 
 		this.xController = new XYController('#x-controller');
+		this.yController = new XYController('#y-controller');
+		this.indicator = utils.getEl('.scan-indicator');
 		// console.log(this.xController);
 		
 		this.imageLoaded = false;
@@ -70,51 +72,38 @@ export default class Scanner {
 		var currentStep = 0;
 		var newStep = 0;
 
+		console.log(self.indicator);
 		function scanLoop(timestamp){
 
 			if (!start) start = timestamp;
 			var progress = ((timestamp - start) / duration);
 
-			var xVal = self.xController.getValueAtPercent(progress);
-
-			// I DUNNO WHY DIVIDE BY 2 BUT IT SEEMS TO WORK CORRECTLY :/
+			// calculate the next step
 			newStep = progress * self.scanArea.canvas.width;
 
+			// the length of the scan step;
 			var stepsDiff = newStep - currentStep;
-			if (currentStep > 0){
-				var scanned = self.scanArea.context.getImageData(
-					currentStep, // dx
-					0, // dy
-					stepsDiff, // width
-					self.scanArea.canvas.height // height
-				);
 
-				self.scanResult.context.putImageData(
-					scanned,
-					currentStep, 
-					0, 
-					0, 
-					0, 
-					scanned.width, 
-					scanned.height
-				);
+			if (currentStep > 0){
+				var scanned = self.scanArea.context.getImageData(currentStep, 0, stepsDiff, self.scanArea.canvas.height );
+				self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
 			}
 
-			// console.log(xVal);
-			self.scanArea.moveImage(xVal);
-
+			// move the image
+			self.scanArea.moveImage(self.xController.getValueAtPercent(progress));
+			// need to experiment with transform translate px val to see wheter it's better performant
+			self.indicator.style.left = (progress * 100).toFixed(2) + '%';
+			// increment the step
 			currentStep = newStep;
 
 			if ( progress < 1 ){
 				window.requestAnimationFrame(scanLoop);
-			} else{
-				alert('finished');
 			}
 
 		}
 
 		window.requestAnimationFrame(scanLoop);
-		// 
+
 		// one of the ways to approach it is to scan every pixel and the other to scan in batches.
 		// everypixel approach would be time independent and reliant only on comp performance,
 		// whereas the batch approach would need to scan 1 px fer animation Frame therefore would limit our speed to ~60px per second.

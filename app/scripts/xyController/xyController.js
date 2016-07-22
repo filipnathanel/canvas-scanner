@@ -19,25 +19,14 @@ export default class XYController{
 		this.svgWidth = this.$svg.width.baseVal.value;
 		this.svgHeight = this.$svg.height.baseVal.value;
 
-
 		this.pathData = new PathData( this.$svg );
-		// this.chart = new Chart();
-		/*
-		The use
-		this.points2.insert
-		 */
-
 
 		// this will instantiate points as SortedArray that sorts as supplied sorting function.
 		this.points = utils.SortedArray.comparing( (item) => {return item.options.cx;}, []);
 		this.paths = [];
 
-		// console.log(this.$svg);
-
 		this.init();
 		this.initEvents();
-
-		console.log(this.$svg);
 
 	}
 
@@ -45,6 +34,11 @@ export default class XYController{
 
 		this.addPoint(0,this.svgHeight/2);
 		// this.addPoint(40,100);
+		 
+		// test if the x val of Coord is equal
+		this.addPoint(40, this.svgHeight/4);
+		this.addPoint(40, this.svgHeight/3);
+		 
 		this.addPoint(this.svgWidth, this.svgHeight/2);
 
 		// this.connectPoints();
@@ -61,10 +55,7 @@ export default class XYController{
 		var len = this.pathData.data.array.length;
 		var loopTo = len -1;
 
-		console.log(this.pathData)
 		if (len > 1){
-
-			// this.pathData.data.forEach( (point) => {
 			
 			// do some shit for every point but the last one
 			for (var i = 0; i < loopTo; i++) {
@@ -77,59 +68,46 @@ export default class XYController{
 					'stroke-width':'2'
 				}, this.$svg);
 
-				// this.paths.push(path);
-				// console.log(path.el);
 			}
-
-			// // the last un
-			// this.points.array[loopTo];
-
 		}
+		
 	}
 
 	getValueAtPercent( percent ){
 
-		// simply calculate the x coordinate at given x percent
-		var currentX = this.svgWidth * percent < this.svgWidth ? this.svgWidth * percent : this.svgWidth ;
-		
-		var currentPath = this.pathData.getPathAtX(currentX);
-		// var pth = this.pathData.el;
-		
-		// console.log(percent);
-		// console.log(currentX);
-		// console.log( this.pathData );
-
-		var currentPathIndex = this.pathData.data.search(currentPath),
+		// simply calculate the x coordinate at which we will be looking for automation value
+		var svgX = this.svgWidth * percent < this.svgWidth ? this.svgWidth * percent : this.svgWidth ;
+		// get the path that is present and controlling for given svgX value
+		var currentPath = this.pathData.getPathAtX(svgX),
+			currentPathIndex = this.pathData.data.search(currentPath),
 			nextPathIndex = currentPathIndex + 1;
 
-		// to bedzie do sfixowania dla ostatniego elementu
-		// no i wogle trzeba ta metode bedzie zoptymalizować;
+		// if currentPath isn't the last one
 		if (this.pathData.data.array[nextPathIndex]){
 			var xWidth = this.pathData.data.array[nextPathIndex].x - currentPath.x;
-		}
 
-		var relativeX = currentX - currentPath.x;
-		var xPercent = relativeX / xWidth;
+			// get x value starting from the start of the current path
+			var relativeX = svgX - currentPath.x,
+			// get progress percent for current path
+				xPercent = relativeX / xWidth;
+		}
 
 		var paath = this.pathData.data.array[currentPathIndex].path;
 		if (paath){
-			// we divide it by two because getTotalLength returns double for single segment patches
+			// we divide it by two because getTotalLength returns double for single segment paths
 			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() / 2 * xPercent);
 			
-			// console.log(coords);
-			var point = new Circle({
-				cx: coords.x,
-				cy: coords.y,
-				r: 2,
-				fill: 'yellow'
-			}, this.$svg);
+			// just indicate the current progress
+			// disable after dev
+			// var point = new Circle({
+			// 	cx: coords.x,
+			// 	cy: coords.y,
+			// 	r: 2,
+			// 	fill: 'yellow'
+			// }, this.$svg);
 
 			return coords.y / this.svgHeight;
 		}
-
-
-		// console.log(xPercent);
-
 
 	}
 
@@ -148,6 +126,7 @@ export default class XYController{
 
 	onRightClick(e){
 		e.preventDefault();
+		console.log('czo');
 		var mousePos = SVGUtils.mousePos(e, this.$svg);
 		this.addPoint(mousePos.x, mousePos.y);
 

@@ -1,4 +1,5 @@
 import * as utils from '../utils/utils';
+import SVGUtils from '../utils/svgUtils';
 import Circle from './Circle';
 import Path from './Path';
 
@@ -9,15 +10,6 @@ export default class PathData  {
 		this.data = utils.SortedArray.comparing( (point) => {
 			return point.x
 		}, [] );
-		// return utils.SortedArray.comparing( (item) => {return item.options.cx;}, []);
-		
-
-		// super();
-		// // mozemy Tej tablicy dawac różne typy jako wierzchołki
-		// // ale w naszym wypadku to będą tylko Pointy
-		// return utils.SortedArray.comparing( (item) => {
-		// 	return item.options.cx;
-		// }, []);
 
 	}
 
@@ -33,9 +25,29 @@ export default class PathData  {
 		point.x = x;
 		point.y = y;
 
+		point.el.addEventListener('mousedown', (e) => {this.onPointLeftClick(e);} )
+		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e);} )
+
+
 		this.data.insert(point);
 
 		this.addPaths();
+	}
+
+	onPointLeftClick(e){
+		var mousePos = SVGUtils.mousePos(e, this.$svg)
+		console.log(mousePos);
+		console.log(event.target);
+		// console.log('left click');
+		// console.log(e);
+	}
+	onPointRightClick(e){
+		e.stopPropagation();
+		e.preventDefault();
+
+		var mousePos = SVGUtils.mousePos(e, this.$svg)
+		console.log('right click');
+		console.log(e);
 	}
 
 	// temp function 
@@ -47,12 +59,16 @@ export default class PathData  {
 
 			if( this.data.array[i+1] ){
 				if ( x >= this.data.array[i].x && x < this.data.array[i+1].x ){
-					return this.data.array[i];
+					if ( this.data.array[i].x === this.data.array[i+1].x ) {
+						return this.data.array[i+1];
+						console.log('czlono');
+					} else {
+						return this.data.array[i];
+					}
 				}
 			} else {
-				return this.data.array[dataLen - 1 ];
-			}
-			
+				return this.data.array[dataLen - 1];
+			}	
 		}
 		
 	}

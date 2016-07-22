@@ -60,15 +60,10 @@ export default class ScanArea {
 	}
 	
 	moveImage(xVal){
-		
-		// var c = this.canvas.width * progress / this.canvas.width ;
-		// console.log(c);
 		if (xVal){
 			this.clear();
 			this.context.drawImage( this.image, (this.canvas.width - this.image.width ) * xVal, (this.canvas.height - this.image.height) / 2 );
 		}
-		// rozpietosc od 0 do this.canvas.width - this.image.width
-		// albo this.canvas.width - this.image.width
 	}
 
 
