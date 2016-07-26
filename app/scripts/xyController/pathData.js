@@ -7,9 +7,23 @@ export default class PathData  {
 	constructor(svg){
 
 		this.$svg = svg;
-		this.data = utils.SortedArray.comparing( (point) => {
-			return point.x
-		}, [] );
+		// this.data = utils.SortedArray.comparing( (point) => {
+
+		// 	return point.x
+		// }, [] );
+
+		this.data = new utils.SortedArray([], function(a,b){		
+	        if (a.x === b.x) {
+	        	if (a.y === b.y){
+	        		return 0
+	        	}else{
+	        		return a.y < b.y ? -1 : 1;
+	        	}
+	        }
+	        return a.x < b.x ? -1 : 1;
+		});
+
+		// this.onPointLeftClick = this.onPointLeftClick.bind(this);
 
 	}
 
@@ -25,21 +39,66 @@ export default class PathData  {
 		point.x = x;
 		point.y = y;
 
-		point.el.addEventListener('mousedown', (e) => {this.onPointLeftClick(e);} )
+		point.el.addEventListener('mousedown', (e) => {
+			this.onPointLeftClick(e, point)	
+		});
 		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e);} )
-
 
 		this.data.insert(point);
 
 		this.addPaths();
 	}
 
-	onPointLeftClick(e){
-		var mousePos = SVGUtils.mousePos(e, this.$svg)
-		console.log(mousePos);
-		console.log(event.target);
-		// console.log('left click');
-		// console.log(e);
+	onPointLeftClick(e, point){
+
+
+		var self = this;
+		var selectedPoint = event.target;
+
+		// var dataPointIndex = this.data.search(point)
+		// var dataPoint = this.data.array[dataPointIndex];
+
+		// console.log(dataPoint);
+		
+		var clickPos = SVGUtils.mousePos(e, this.$svg);
+		var posDiff = { 
+			x: selectedPoint.getAttribute('cx') - clickPos.x,
+			y: selectedPoint.getAttribute('cy') - clickPos.y
+		}
+
+		function dragHandler(e) {
+
+			self.data.remove(point);
+
+			var movePos = SVGUtils.mousePos(e, self.$svg),
+				xPos = movePos.x + posDiff.x,
+				yPos = movePos.y + posDiff.y;
+
+			point.setOption('cx', xPos);
+			point.setOption('cy', yPos);
+
+			point.x = xPos;
+			point.y = yPos;
+
+			var newPoint = point;
+
+			self.data.insert(newPoint);
+
+			self.addPaths();
+
+		}
+		// attach drag handler
+		this.$svg.addEventListener('mousemove', dragHandler);
+
+		function onMouseUp(){
+			// selectedPoint.removeEventListener('mousedown', this.onPointLeftClick);
+			console.log('removedEvent');
+			self.$svg.removeEventListener('mousemove', dragHandler);
+			selectedPoint.removeEventListener('mouseup', onMouseUp);
+		}
+		selectedPoint.addEventListener('mouseup', onMouseUp);
+
+
 	}
 	onPointRightClick(e){
 		e.stopPropagation();
@@ -83,9 +142,6 @@ export default class PathData  {
 
 		if (len > 1){
 
-			// this.data.forEach( (point) => {
-			// do some shit for every point but the last one
-
 			for (var i = 0; i < loopTo; i++) {
 
 				var d = `M${this.data.array[i].x} ${this.data.array[i].y} L${this.data.array[i+1].x} ${this.data.array[i+1].y} Z`;
@@ -94,15 +150,12 @@ export default class PathData  {
 					'd':d,
 					'stroke':'blue',
 					'stroke-width':'1'
-				}, this.$svg);
+				}, this.$svg, true);
 
 				this.data.array[i].path = path;
 
-				// this.paths.push(path);
-				// console.log(path.el);
 			}
 
-			// this.points.array[loopTo];
 		}
 	}
 

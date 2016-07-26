@@ -37,7 +37,7 @@ export default class XYController{
 		 
 		// test if the x val of Coord is equal
 		this.addPoint(40, this.svgHeight/4);
-		this.addPoint(40, this.svgHeight/3);
+		this.addPoint(150, this.svgHeight/3);
 		 
 		this.addPoint(this.svgWidth, this.svgHeight/2);
 
@@ -48,29 +48,6 @@ export default class XYController{
 	addPoint(x, y){
 		this.pathData.addPoint(x, y);
 		// this.connectPoints();
-	}
-
-	connectPoints(){
-
-		var len = this.pathData.data.array.length;
-		var loopTo = len -1;
-
-		if (len > 1){
-			
-			// do some shit for every point but the last one
-			for (var i = 0; i < loopTo; i++) {
-
-				var d = `M${this.pathData.data.array[i].x} ${this.pathData.data.array[i].y} L${this.pathData.data.array[i+1].x} ${this.pathData.data.array[i+1].y} Z`;
-
-				var path = new Path({
-					'd':d,
-					'stroke':'blue',
-					'stroke-width':'2'
-				}, this.$svg);
-
-			}
-		}
-		
 	}
 
 	getValueAtPercent( percent ){
