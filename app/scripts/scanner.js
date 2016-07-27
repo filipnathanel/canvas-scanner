@@ -18,7 +18,7 @@ export default class Scanner {
 		this.$scanButton = utils.getEl('#start_scan');
 
 		this.xController = new XYController('#x-controller');
-		this.yController = new XYController('#y-controller');
+		// this.yController = new XYController('#y-controller');
 		this.indicator = utils.getEl('.scan-indicator');
 		// console.log(this.xController);
 		

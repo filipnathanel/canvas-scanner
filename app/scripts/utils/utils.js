@@ -100,6 +100,16 @@ export function getEl(el, context = document){
 }
 
 
+/**
+ * returns random integer from the range
+ * @param  {int} min minimum returned value
+ * @param  {int} max maximum returned value
+ * @return {int}     the random number
+ */
+export function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 // https://github.com/javascript/sorted-array
 export class SortedArray {
 

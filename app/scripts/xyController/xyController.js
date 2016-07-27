@@ -32,21 +32,16 @@ export default class XYController{
 
 	init(){
 
+		// add the automation points at the beginning and at the end of the control space
 		this.addPoint(0,this.svgHeight/2);
-		// this.addPoint(40,100);
-		 
-		// test if the x val of Coord is equal
-		this.addPoint(40, this.svgHeight/4);
-		this.addPoint(150, this.svgHeight/3);
-		 
 		this.addPoint(this.svgWidth, this.svgHeight/2);
 
-		// this.connectPoints();
+		this.addPoint(this.svgWidth/2, this.svgHeight/4, 'quadratic');
 
 	}
 
-	addPoint(x, y){
-		this.pathData.addPoint(x, y);
+	addPoint(x, y, type){
+		this.pathData.addPoint(x, y, type);
 		// this.connectPoints();
 	}
 
@@ -72,7 +67,8 @@ export default class XYController{
 		var paath = this.pathData.data.array[currentPathIndex].path;
 		if (paath){
 			// we divide it by two because getTotalLength returns double for single segment paths
-			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() / 2 * xPercent);
+			console.log
+			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() * xPercent);
 			
 			// just indicate the current progress
 			// disable after dev
@@ -96,10 +92,7 @@ export default class XYController{
 		this.$svg.addEventListener('contextmenu', (e) => { this.onRightClick(e); });
 	}
 
-	onLeftClick(e){
-		var mousePos = SVGUtils.mousePos(e, this.$svg);
-
-	}
+	onLeftClick(e){}
 
 	onRightClick(e){
 		e.preventDefault();
