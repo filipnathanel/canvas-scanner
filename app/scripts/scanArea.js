@@ -32,32 +32,12 @@ export default class ScanArea extends Canvas {
 
 	}
 
-	loadFile(file){
+	drawImage(image){
 
-		var fr = new FileReader();
+		this.image = image;
 
-		var load = new Promise((resolve, reject) => {
-
-			fr.readAsDataURL(file);
-			
-			fr.addEventListener('load', (e) => {
-
-				var rawImage = e.target.result;
-				var image = new Image();
-				image.src = rawImage;
-				
-				this.image = image;
-
-				resolve(image);
-
-			});
-
-		});
-
-		load.then( (image) => {
-			this.context.drawImage(image, (this.canvas.width - image.width) / 2, (this.canvas.height - image.height) / 2);
-			this.imageLoaded = true;
-		});
+		this.context.drawImage(image, (this.canvas.width - image.width) / 2, (this.canvas.height - image.height) / 2);
+		this.imageLoaded = true;
 
 	}
 

@@ -9,6 +9,7 @@
 	}
 	.scan-area{
 		border-bottom: 1px solid #777;
+		width:50%;
 	}
 		.scan-indicator{
 			position: absolute;
@@ -21,7 +22,7 @@
 		}
 	.scan-result{
 		position: absolute;
-		width:30%;
+		width:50%;
 		bottom:0;
 		right:0;
 		background-color: #fff;

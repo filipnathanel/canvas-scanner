@@ -21,6 +21,8 @@ export default class XYController{
 		this.svgWidth = this.$svg.width.baseVal.value;
 		this.svgHeight = this.$svg.height.baseVal.value;
 
+		console.log(this.svgWidth);
+
 		this.pathData = new PathData( this.$svg );
 		this.pointContextMenu = new ContextMenu();
 
@@ -33,10 +35,7 @@ export default class XYController{
 
 		// add the automation points at the beginning and at the end of the control space
 		this.addPoint(0,this.svgHeight/2);
-		this.addPoint(this.svgWidth, this.svgHeight/2);
-
-		this.addPoint(this.svgWidth/2, this.svgHeight/4, 'quadratic');
-		this.addPoint(this.svgWidth/4*3, this.svgHeight/4*3, 'quadratic');
+		this.addPoint(this.svgWidth, this.svgHeight/2, 'linear');
 
 	}
 
