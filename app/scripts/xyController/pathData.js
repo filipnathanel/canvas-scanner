@@ -48,14 +48,33 @@ export default class PathData  {
 		point.type = type;
 		point.slope = 0;
 
+		point.el.classList.add('automation-point');
+
 		point.el.addEventListener('mousedown', (e) => {
 			this.onPointLeftClick(e, point)	
 		});
-		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e);} )
+		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
 
 		this.data.insert(point);
 
 		this.redraw();
+	}
+
+	removePoint(point){
+
+		if (point.el){
+			point.el.remove();
+		}
+		if (point.path){
+			point.path.el.remove();
+		}
+		if (point.slopeControl){
+			point.slopeControl.el.remove();
+		}
+		this.data.remove(point);
+
+		this.redraw();
+
 	}
 
 	/**
@@ -65,8 +84,6 @@ export default class PathData  {
 	 * @return {void} 
 	 */
 	onPointLeftClick(e, point){
-
-		console.log(this.data);
 
 		var self = this,
 			selectedPoint = event.target,
@@ -109,16 +126,14 @@ export default class PathData  {
 		document.addEventListener('mouseup', onMouseUp);
 	}
 
-	onPointRightClick(e){
-		e.stopPropagation();
+	onPointRightClick(e, point){
 		e.preventDefault();
+		e.stopPropagation();
 
-		var mousePos = SVGUtils.mousePos(e, this.$svg)
-		console.log('right click');
-		console.log(e);
+		this.removePoint(point);
+
 	}
 
-	// temp function 
 	getPathAtX(x){
 
 		var dataLen = this.data.array.length;
@@ -129,7 +144,6 @@ export default class PathData  {
 				if ( x >= this.data.array[i].x && x < this.data.array[i+1].x ){
 					if ( this.data.array[i].x === this.data.array[i+1].x ) {
 						return this.data.array[i+1];
-						console.log('czlono');
 					} else {
 						return this.data.array[i];
 					}
@@ -179,7 +193,6 @@ export default class PathData  {
 
 	}
 
-	// createPath(type, x1, y1, x2, y2, slope){
 	createPath(pathFrom, pathTo){
 
 		var type = pathFrom.type,
@@ -189,24 +202,18 @@ export default class PathData  {
 			y2 = pathTo.y,
 			slope = pathFrom.slope;
 
-
-		// console.log(slope);
 		switch(type){
 			// simply create a line from point one to point two
 			case 'linear':
 				var d = `M${x1} ${y1} L${x2} ${y2}`;
 				break;
 			case 'quadratic':
-			// console.log(pathFrom);
 
 				var slopeXMin = y1 >= y2 ? x1 : x2 , // the x1 will always be smaller or equal to x2
 					slopeXMax = y1 >= y2 ? x2 : x1 , // the x2 will always be bigger or equal to x1
 					slopeYMax = y1 >= y2 ? y1 : y2,
 					slopeYMin = y1 >= y2 ? y2 : y1;
  
-				// now the slope will be an number (float?) from range [-50, 50];
-				// var slope = utils.getRandomInt(-50, 50);
-
 				var slopeYRange = slopeYMax - slopeYMin; 
 				var slopeXRange = slopeXMax - slopeXMin;
 
@@ -258,8 +265,13 @@ export default class PathData  {
 
 					slopeControl.el.classList.add('slope-controller');
 					slopeControl.el.addEventListener('mousedown', (e)=>{
-						console.log(i);
 						this.onSlopeControlLeftClick(e, this.data.array[i] );
+					});
+					slopeControl.el.addEventListener('contextmenu', (e)=>{
+						e.preventDefault();
+						e.stopPropagation();
+						this.data.array[i].slope = 0;
+						this.redraw();
 					});
 
 					this.data.array[i].slopeControl = slopeControl;
@@ -281,8 +293,6 @@ export default class PathData  {
 	}
 
 	onSlopeControlLeftClick(e, point){
-
-		console.log(this.data.array[this.data.search(point)]);
 
 		var self = this,
 			selectedSlopeControl = event.target,
@@ -325,6 +335,7 @@ export default class PathData  {
 				point.slope = point.slope - diff;
 			}
 		}
+		
 		function decreaseSlope(diff){
 			if (point.slope + diff > 50){
 				point.slope = 50

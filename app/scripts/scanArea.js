@@ -8,22 +8,29 @@ export default class ScanArea {
 		this.canvas = utils.getEl(scanArea, context);
 		this.context = this.canvas.getContext('2d');
 
+		// this is for landscape 72dpi
+		this.a4BaseWidth = 842;
+		this.a4BaseHeight = 595;
+
 		this.init();
 		this.initEvents();
 	}
 
 	init(){
-		this.canvas.width = Globals.viewport.width;
-		this.canvas.height = Globals.viewport.height / 2 ;
 
-		console.log(this.canvas.width);
+		// this.canvas.width = Globals.viewport.width;
+		// this.canvas.height = Globals.viewport.height / 2 ;
+		this.canvas.width = this.a4BaseWidth;
+		this.canvas.height = this.a4BaseHeight
+
+		// console.log(this.canvas.width);
 	}
 
 	initEvents(){
 
 		Globals.onResize.add(() => { 
 			console.log('scanArea onresize trigerred');
-			this.canvas.width = Globals.viewport.width;
+			// this.canvas.width = Globals.viewport.width;
 		});
 
 	}

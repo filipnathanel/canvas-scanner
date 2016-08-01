@@ -7,6 +7,8 @@ import Circle from './circle';
 import Path from './path';
 import PathData from './pathData';
 
+import ContextMenu from '../contextMenu/contextMenu';
+
 
 export default class XYController{
 
@@ -20,10 +22,7 @@ export default class XYController{
 		this.svgHeight = this.$svg.height.baseVal.value;
 
 		this.pathData = new PathData( this.$svg );
-
-		// this will instantiate points as SortedArray that sorts as supplied sorting function.
-		this.points = utils.SortedArray.comparing( (item) => {return item.options.cx;}, []);
-		this.paths = [];
+		this.pointContextMenu = new ContextMenu();
 
 		this.init();
 		this.initEvents();
@@ -41,9 +40,8 @@ export default class XYController{
 
 	}
 
-	addPoint(x, y, type){
+	addPoint(x, y, type = 'quadratic'){
 		this.pathData.addPoint(x, y, type);
-		// this.connectPoints();
 	}
 
 	getValueAtPercent( percent ){
@@ -112,7 +110,6 @@ export default class XYController{
 				console.log('dragging');
 				break;
 			default:
-
 		}
 	}
 
