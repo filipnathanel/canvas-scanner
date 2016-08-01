@@ -22,7 +22,6 @@ export default class Scanner {
 		this.xController = new XYController('#x-controller');
 		// this.yController = new XYController('#y-controller');
 		this.indicator = utils.getEl('.scan-indicator');
-		// console.log(this.xController);
 		
 		this.imageLoaded = false;
 
@@ -50,12 +49,60 @@ export default class Scanner {
 
 	onImageUpdated(e){
 
+		var file = e.detail.file;
+
 		this.scanArea.image = null;
 		this.scanArea.context.clearRect(0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height);
 
-		var file = e.detail.file;
-		this.scanArea.loadFile(file);
+		this.loadFile(file).then( (image) => {
+
+			this.rescaleScanAreas(image);
+
+			this.scanArea.drawImage(image);
+		});
+
 	}
+
+	loadFile(file){
+		var fr = new FileReader();
+
+		return new Promise((resolve, reject) => {
+
+			fr.readAsDataURL(file);
+			
+			fr.addEventListener('load', (e) => {
+
+				var rawImage = e.target.result;
+				var image = new Image();
+				image.src = rawImage;
+
+				resolve(image);
+
+			});
+
+		});
+	}
+
+	rescaleScanAreas(image){
+
+		var a4BaseWidth = 842;
+		var a4BaseHeight = 595;
+
+		// we need to handle scaling down as well
+		if ( this.scanArea.canvas.width < image.width + image.width * 0.2 || this.scanArea.canvas.height < image.height + image.height * 0.2){
+			var scanWidth = image.width + image.width * 0.2;
+			var scanHeight = image.height + image.height * 0.2;
+
+			var widthDPI = Math.round( scanWidth/ a4BaseWidth * 72);
+			var heightDPI = Math.round( scanHeight/ a4BaseHeight * 72);
+
+			var DPI = widthDPI>=heightDPI ? widthDPI:heightDPI;
+
+			this.setDPI( DPI );
+		}
+
+	}
+
 
 	// scan trigger
 	onScanClick(e){
@@ -72,7 +119,7 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 1000;
+		var duration = 20000;
 
 		var currentStep = 0;
 		var newStep = 0;
