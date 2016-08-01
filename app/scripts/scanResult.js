@@ -64,49 +64,53 @@ export default class ScanResult extends Canvas {
 			bottom:null
 		}
 
-		var start = new Date().getTime();
-
-		for ( i = 0; i < dataLen; i+=4) {
-			if (imgData.data[i+3] !== 0) {
-		      x = (i / 4) % this.canvas.width;
-		      y = ~~((i / 4) / this.canvas.width);
-		  
-		      if (bounds.top === null) {
-		        bounds.top = y;
-		      }
-		      
-		      if (bounds.left === null) {
-		        bounds.left = x; 
-		      } else if (x < bounds.left) {
-		        bounds.left = x;
-		      }
-		      
-		      if (bounds.right === null) {
-		        bounds.right = x; 
-		      } else if (bounds.right < x) {
-		        bounds.right = x;
-		      }
-		      
-		      if (bounds.bottom === null) {
-		        bounds.bottom = y;
-		      } else if (bounds.bottom < y) {
-		        bounds.bottom = y;
-		      }
-		    }
-		}
-
-		var trimHeight = bounds.bottom - bounds.top,
-			trimWidth = bounds.right - bounds.left;
-
-		console.log(trimWidth + ' width');
-		console.log(trimHeight + ' height');
-
-		var end = new Date().getTime();
-		var time = end - start;
-		console.log('execution Time: ' + time);
-
 		return new Promise((resolve, reject) => {
 
+			for ( i = 0; i < dataLen; i+=4) {
+				if (imgData.data[i+3] !== 0) {
+			      x = (i / 4) % this.canvas.width;
+			      y = ~~((i / 4) / this.canvas.width);
+			  
+			      if (bounds.top === null) {
+			        bounds.top = y;
+			      }
+			      
+			      if (bounds.left === null) {
+			        bounds.left = x; 
+			      } else if (x < bounds.left) {
+			        bounds.left = x;
+			      }
+			      
+			      if (bounds.right === null) {
+			        bounds.right = x; 
+			      } else if (bounds.right < x) {
+			        bounds.right = x;
+			      }
+			      
+			      if (bounds.bottom === null) {
+			        bounds.bottom = y;
+			      } else if (bounds.bottom < y) {
+			        bounds.bottom = y;
+			      }
+			    }
+			}
+
+			var trimHeight = bounds.bottom - bounds.top,
+				trimWidth = bounds.right - bounds.left,
+				trimmed = this.context.getImageData(bounds.left, bounds.top, trimWidth, trimHeight);
+
+			var tempCanvas = document.createElement('canvas'),
+				tempContext = tempCanvas.getContext('2d');
+
+			tempCanvas.width = trimWidth;
+			tempCanvas.height = trimHeight;
+			tempContext.putImageData(trimmed, 0, 0);
+
+			/**
+			 * Need to make it a blob
+			 * so we can process bigger files
+			 */
+			resolve(tempCanvas.toDataURL());
 
 		});
 
