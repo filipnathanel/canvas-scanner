@@ -3,6 +3,12 @@ import SVGUtils from '../utils/svgUtils';
 import Circle from './Circle';
 import Path from './Path';
 
+/**
+ * NOTES
+ * - should separate Points into own class
+ * - should generalise slopeController for every different 
+ */
+
 export default class PathData  {
 	constructor(svg){
 
@@ -49,7 +55,7 @@ export default class PathData  {
 
 		this.data.insert(point);
 
-		this.addPaths();
+		this.redraw();
 	}
 
 	/**
@@ -59,6 +65,8 @@ export default class PathData  {
 	 * @return {void} 
 	 */
 	onPointLeftClick(e, point){
+
+		console.log(this.data);
 
 		var self = this,
 			selectedPoint = event.target,
@@ -86,19 +94,19 @@ export default class PathData  {
 
 			self.data.insert(newPoint);
 
-			self.addPaths();
+			self.redraw();
 
 		}
 
 		function onMouseUp(){
 			self.$svg.removeEventListener('mousemove', dragHandler);
-			selectedPoint.removeEventListener('mouseup', onMouseUp);
+			document.removeEventListener('mouseup', onMouseUp);
 		}
 
 		// attach drag handler
 		this.$svg.addEventListener('mousemove', dragHandler);
 		// listen for the drag end
-		selectedPoint.addEventListener('mouseup', onMouseUp);
+		document.addEventListener('mouseup', onMouseUp);
 	}
 
 	onPointRightClick(e){
@@ -144,13 +152,13 @@ export default class PathData  {
 
 			for (var i = 0; i < loopTo; i++) {
 
-				var d = this.createPath( this.data.array[i].type, this.data.array[i].x, this.data.array[i].y, this.data.array[i+1].x, this.data.array[i+1].y, this.data.array[i].slope  );
+				var d = this.createPath( this.data.array[i], this.data.array[i+1] );
 
 				var path = new Path({
 					'd':d,
 					'stroke':'blue',
 					'stroke-width':'1'
-				}, this.$svg, true);
+				}, this.$svg, true);	
 
 				this.data.array[i].path = path;
 
@@ -171,7 +179,16 @@ export default class PathData  {
 
 	}
 
-	createPath(type, x1, y1, x2, y2, slope){
+	// createPath(type, x1, y1, x2, y2, slope){
+	createPath(pathFrom, pathTo){
+
+		var type = pathFrom.type,
+			x1 = pathFrom.x,
+			y1 = pathFrom.y,
+			x2 = pathTo.x,
+			y2 = pathTo.y,
+			slope = pathFrom.slope;
+
 
 		// console.log(slope);
 		switch(type){
@@ -180,14 +197,15 @@ export default class PathData  {
 				var d = `M${x1} ${y1} L${x2} ${y2}`;
 				break;
 			case 'quadratic':
+			// console.log(pathFrom);
 
 				var slopeXMin = y1 >= y2 ? x1 : x2 , // the x1 will always be smaller or equal to x2
 					slopeXMax = y1 >= y2 ? x2 : x1 , // the x2 will always be bigger or equal to x1
 					slopeYMax = y1 >= y2 ? y1 : y2,
 					slopeYMin = y1 >= y2 ? y2 : y1;
-
+ 
 				// now the slope will be an number (float?) from range [-50, 50];
-				var slope = utils.getRandomInt(-50, 50);
+				// var slope = utils.getRandomInt(-50, 50);
 
 				var slopeYRange = slopeYMax - slopeYMin; 
 				var slopeXRange = slopeXMax - slopeXMin;
@@ -203,22 +221,128 @@ export default class PathData  {
 					var slopeY = y1;
 				}
 
-				var slope = slopeX.toFixed(1) + ' ' + slopeY.toFixed(1);
+				var slopeStr = slopeX.toFixed(1) + ' ' + slopeY.toFixed(1);
 
-				var point = new Circle({
-					cx: slopeX,
-					cy: slopeY,
-					r: 4,
-					fill: 'yellow',
-				}, this.$svg);
-
-				var d = `M${x1} ${y1} Q${slope} ${x2} ${y2}`;
+				var d = `M${x1} ${y1} Q${slopeStr} ${x2} ${y2}`;
 				break;
 			default :
 				console.log('path type not supported');
 		}
+
 		return d;
 
+	}
+
+	addControls(){
+
+		this.removeControls();
+
+		var len = this.data.array.length;
+		var loopTo = len -1;
+
+		if (len > 1){
+
+			for (let i = 0; i < loopTo; i++) {
+
+				if (this.data.array[i].type === 'quadratic'){
+
+					var path = this.data.array[i].path;
+
+					var slopeControlPos = path.el.getPointAtLength( path.el.getTotalLength() / 2 );
+					var slopeControl = new Circle({
+						cx: slopeControlPos.x.toFixed(2),
+						cy: slopeControlPos.y.toFixed(2),
+						r: 4,
+						fill: 'blue',
+					}, this.$svg);
+
+					slopeControl.el.classList.add('slope-controller');
+					slopeControl.el.addEventListener('mousedown', (e)=>{
+						console.log(i);
+						this.onSlopeControlLeftClick(e, this.data.array[i] );
+					});
+
+					this.data.array[i].slopeControl = slopeControl;
+
+				}
+			}
+		}
+	}
+
+	removeControls(){
+		this.data.array.forEach( (item) => {
+
+			if (item.slopeControl){
+				item.slopeControl.el.remove();
+				item.slopeControl = undefined;
+			}
+
+		});
+	}
+
+	onSlopeControlLeftClick(e, point){
+
+		console.log(this.data.array[this.data.search(point)]);
+
+		var self = this,
+			selectedSlopeControl = event.target,
+			clickPos = SVGUtils.mousePos(e, this.$svg),
+			posDiff = { 
+				x: selectedSlopeControl.getAttribute('cx') - clickPos.x,
+				y: selectedSlopeControl.getAttribute('cy') - clickPos.y
+			},
+			mouseCache = clickPos.y + posDiff.y;
+
+		function dragHandler(e) {
+
+			var movePos = SVGUtils.mousePos(e, self.$svg),
+				xPos = movePos.x + posDiff.x,
+				yPos = movePos.y + posDiff.y;
+
+				var moveDiff = mouseCache - yPos;
+				if (moveDiff > 0){
+					increaseSlope(moveDiff);
+				}else if (moveDiff < 0){
+					decreaseSlope(moveDiff);
+				} else{
+					// do nothing
+				}
+			mouseCache = yPos;
+
+			self.redraw();
+
+		}
+
+		function onMouseUp(){
+			self.$svg.removeEventListener('mousemove', dragHandler);
+			document.removeEventListener('mouseup', onMouseUp);
+		}
+
+		function increaseSlope(diff){
+			if (point.slope + diff < -50){
+				point.slope = -50;
+			}else{
+				point.slope = point.slope - diff;
+			}
+		}
+		function decreaseSlope(diff){
+			if (point.slope + diff > 50){
+				point.slope = 50
+			}else{
+				point.slope = point.slope - diff;
+			}
+		}
+
+		// attach drag handler
+		this.$svg.addEventListener('mousemove', dragHandler);
+		// listen for the drag end
+		document.addEventListener('mouseup', onMouseUp);
+	}
+
+
+	redraw(){
+		this.addPaths();
+		this.addControls();
 	}
 
 }

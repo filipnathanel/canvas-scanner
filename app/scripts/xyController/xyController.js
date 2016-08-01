@@ -37,6 +37,7 @@ export default class XYController{
 		this.addPoint(this.svgWidth, this.svgHeight/2);
 
 		this.addPoint(this.svgWidth/2, this.svgHeight/4, 'quadratic');
+		this.addPoint(this.svgWidth/4*3, this.svgHeight/4*3, 'quadratic');
 
 	}
 
