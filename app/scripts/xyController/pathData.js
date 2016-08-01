@@ -39,7 +39,7 @@ export default class PathData  {
 		var point = new Circle({
 			cx: x,
 			cy: y,
-			r: 4,
+			r: 6,
 			fill: 'red',
 		}, this.$svg);
 
