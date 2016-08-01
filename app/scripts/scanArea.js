@@ -1,29 +1,23 @@
 import * as utils from './utils/utils';
 import Globals from './globals';
 
-export default class ScanArea {
+import Canvas from './canvas';
+
+export default class ScanArea extends Canvas {
 	
 	constructor(scanArea, context){
 
-		this.canvas = utils.getEl(scanArea, context);
-		this.context = this.canvas.getContext('2d');
-
-		// this is for landscape 72dpi
-		this.a4BaseWidth = 842;
-		this.a4BaseHeight = 595;
+		super(scanArea, context);
 
 		this.init();
 		this.initEvents();
+		
 	}
 
 	init(){
 
-		// this.canvas.width = Globals.viewport.width;
-		// this.canvas.height = Globals.viewport.height / 2 ;
-		this.canvas.width = this.a4BaseWidth;
-		this.canvas.height = this.a4BaseHeight
+		this.setDPI();
 
-		// console.log(this.canvas.width);
 	}
 
 	initEvents(){
@@ -33,27 +27,38 @@ export default class ScanArea {
 			// this.canvas.width = Globals.viewport.width;
 		});
 
+		// window.czoo = this.setDpi;
+		
+
 	}
 
 	loadFile(file){
+
 		var fr = new FileReader();
 
-		fr.addEventListener('load', (e) => {
-			var rawImage = e.target.result;
-			var image = new Image();
-			image.src = rawImage;
+		var load = new Promise((resolve, reject) => {
+
+			fr.readAsDataURL(file);
 			
-			this.image = image;
+			fr.addEventListener('load', (e) => {
 
-			// this.$scanner.width = image.width + image.width * 0.2;
-			// this.$scanner.height = image.height + image.height * 0.2;
-			this.context.drawImage(image, (this.canvas.width - image.width) / 2, (this.canvas.height - image.height) / 2);
-			this.imageLoaded = true;
+				var rawImage = e.target.result;
+				var image = new Image();
+				image.src = rawImage;
+				
+				this.image = image;
 
-			// setTimeout( () => { this.moveImage() }, 1000);
+				resolve(image);
+
+			});
+
 		});
 
-		fr.readAsDataURL(file);
+		load.then( (image) => {
+			this.context.drawImage(image, (this.canvas.width - image.width) / 2, (this.canvas.height - image.height) / 2);
+			this.imageLoaded = true;
+		});
+
 	}
 
 	redraw(){

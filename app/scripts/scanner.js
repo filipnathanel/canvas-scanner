@@ -9,6 +9,8 @@ import XYController from './xyController/xyController';
 export default class Scanner {
 
 	constructor(scanner){
+
+		this.DPI = 72;
 		
 		// wrap div
 		this.$scanner = utils.getEl(scanner);
@@ -31,6 +33,9 @@ export default class Scanner {
 	}
 
 	activate(){
+
+		// set the default dpi value
+		this.setDPI(this.DPI);
 		this.initEvents();
 	}
 
@@ -67,12 +72,11 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 10000;
+		var duration = 1000;
 
 		var currentStep = 0;
 		var newStep = 0;
 
-		console.log(self.indicator);
 		function scanLoop(timestamp){
 
 			if (!start) start = timestamp;
@@ -92,7 +96,7 @@ export default class Scanner {
 			// move the image
 			self.scanArea.moveImage(self.xController.getValueAtPercent(progress));
 			// need to experiment with transform translate px val to see wheter it's better performant
-			self.indicator.style.left = (progress * 100).toFixed(2) + '%';
+			self.indicator.style.left = (progress * 50).toFixed(2) + '%';
 			// increment the step
 			currentStep = newStep;
 
@@ -109,6 +113,11 @@ export default class Scanner {
 		// whereas the batch approach would need to scan 1 px fer animation Frame therefore would limit our speed to ~60px per second.
 		// I wil first go with the 1 px approach as it seems more bulletproof.
 
+	}
+
+	setDPI( dpi ){
+		this.scanArea.setDPI( dpi );
+		this.scanResult.setDPI( dpi );
 	}
 
 	/**
