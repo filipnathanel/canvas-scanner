@@ -88,17 +88,27 @@ export default class Scanner {
 		var a4BaseWidth = 842;
 		var a4BaseHeight = 595;
 
+		var scanWidth = image.width + image.width * 0.2;
+		var scanHeight = image.height + image.height * 0.2;
+
+		var widthDPI = Math.round( scanWidth / a4BaseWidth * 72);
+		var heightDPI = Math.round( scanHeight / a4BaseHeight * 72);
+		var DPI = widthDPI >= heightDPI ? widthDPI : heightDPI;
+
+		console.log(this.scanArea.canvas.width + ' can width');
+		console.log(image.width + image.width * 0.3);
+		console.log(DPI);
 		// we need to handle scaling down as well
 		if ( this.scanArea.canvas.width < image.width + image.width * 0.2 || this.scanArea.canvas.height < image.height + image.height * 0.2){
-			var scanWidth = image.width + image.width * 0.2;
-			var scanHeight = image.height + image.height * 0.2;
-
-			var widthDPI = Math.round( scanWidth/ a4BaseWidth * 72);
-			var heightDPI = Math.round( scanHeight/ a4BaseHeight * 72);
-
-			var DPI = widthDPI>=heightDPI ? widthDPI:heightDPI;
-
+			console.log('DPI scaled up');
 			this.setDPI( DPI );
+		} else if ( this.scanArea.canvas.width > image.width + image.width * 0.3 || this.scanArea.canvas.height > image.height + image.height * 0.3 ){
+			console.log('DPI scaled down');
+			if ( DPI > 72 ){
+				this.setDPI(DPI);
+			}else{
+				this.setDPI(this.DPI);
+			}
 		}
 
 	}
@@ -119,7 +129,7 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 20000;
+		var duration = 8000;
 
 		var currentStep = 0;
 		var newStep = 0;
