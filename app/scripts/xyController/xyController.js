@@ -21,8 +21,6 @@ export default class XYController{
 		this.svgWidth = this.$svg.width.baseVal.value;
 		this.svgHeight = this.$svg.height.baseVal.value;
 
-		console.log(this.svgWidth);
-
 		this.pathData = new PathData( this.$svg );
 		this.pointContextMenu = new ContextMenu();
 
@@ -60,23 +58,14 @@ export default class XYController{
 			var relativeX = svgX - currentPath.x,
 			// get progress percent for current path
 				xPercent = relativeX / xWidth;
+		}else{
+			return currentPath.y / this.svgHeight;
 		}
 
 		var paath = this.pathData.data.array[currentPathIndex].path;
-		if (paath){
-			// we divide it by two because getTotalLength returns double for single segment paths
-			console.log
-			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() * xPercent);
-			
-			// just indicate the current progress
-			// disable after dev
-			// var point = new Circle({
-			// 	cx: coords.x,
-			// 	cy: coords.y,
-			// 	r: 2,
-			// 	fill: 'yellow'
-			// }, this.$svg);
 
+		if (paath){
+			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() * xPercent);
 			return coords.y / this.svgHeight;
 		}
 

@@ -1,35 +1,33 @@
 // bower:scss
 // endbower
 
-@import 'bower_components/normalize-scss/_normalize';
+// normalize the shizzle
+@import "partials/normalize";
 
-@import 'components/components';
+// sass variables
+@import "partials/variables";
 
-body {
-  background: #fafafa;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #333;
-}
+// Sass functions
+@import "partials/functions";
 
-.hero-unit {
-  margin: 50px auto 0 auto;
-  width: 300px;
-  font-size: 18px;
-  font-weight: 200;
-  line-height: 30px;
-  background-color: #eee;
-  border-radius: 6px;
-  padding: 60px;
-  h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-}
+// typography
+@import "partials/typography";
 
-.browserupgrade {
-  margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
-  padding: 0.2em 0;
-}
+// the grid
+@import "partials/grid";
+
+// modules
+@import "modules/modules";
+
+// base mobile stylesheet
+@import "breakpoints/base";
+
+@media only screen and (min-width: $breakpoint-desktop) {
+
+  // styles in 1030up.scss
+  @import "breakpoints/1030up";
+
+} // end of media query
+
+// more of a standalone components
+@import "components/components";

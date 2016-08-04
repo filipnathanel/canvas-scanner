@@ -4,6 +4,7 @@ import Globals from './globals';
 import ScanArea from './scanArea';
 import ScanResult from './scanResult';
 
+import Automation from './automation';
 import XYController from './xyController/xyController';
 
 export default class Scanner {
@@ -19,8 +20,8 @@ export default class Scanner {
 
 		this.$scanButton = utils.getEl('#start_scan');
 
-		this.xController = new XYController('#x-controller');
-		// this.yController = new XYController('#y-controller');
+		this.automation = new Automation('.automation');
+
 		this.indicator = utils.getEl('.scan-indicator');
 		
 		this.imageLoaded = false;
@@ -51,15 +52,20 @@ export default class Scanner {
 
 		var file = e.detail.file;
 
-		this.scanArea.image = null;
-		this.scanArea.context.clearRect(0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height);
+		if (file){
 
-		this.loadFile(file).then( (image) => {
+			this.scanArea.image = null;
+			this.scanArea.context.clearRect(0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height);
 
-			this.rescaleScanAreas(image);
+			this.loadFile(file).then( (image) => {
 
-			this.scanArea.drawImage(image);
-		});
+				this.rescaleScanAreas(image);
+
+				this.scanArea.drawImage(image);
+			});
+
+		}
+
 
 	}
 
@@ -95,15 +101,10 @@ export default class Scanner {
 		var heightDPI = Math.round( scanHeight / a4BaseHeight * 72);
 		var DPI = widthDPI >= heightDPI ? widthDPI : heightDPI;
 
-		console.log(this.scanArea.canvas.width + ' can width');
-		console.log(image.width + image.width * 0.3);
-		console.log(DPI);
 		// we need to handle scaling down as well
 		if ( this.scanArea.canvas.width < image.width + image.width * 0.2 || this.scanArea.canvas.height < image.height + image.height * 0.2){
-			console.log('DPI scaled up');
 			this.setDPI( DPI );
 		} else if ( this.scanArea.canvas.width > image.width + image.width * 0.3 || this.scanArea.canvas.height > image.height + image.height * 0.3 ){
-			console.log('DPI scaled down');
 			if ( DPI > 72 ){
 				this.setDPI(DPI);
 			}else{
@@ -129,7 +130,7 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 8000;
+		var duration = 10000;
 
 		var currentStep = 0;
 		var newStep = 0;
@@ -151,7 +152,9 @@ export default class Scanner {
 			}
 
 			// move the image
-			self.scanArea.moveImage(self.xController.getValueAtPercent(progress));
+			var change = self.automation.getValueAtPercent(progress);
+			self.scanArea.moveImage(change.x, change.y, change.rotation);
+
 			// need to experiment with transform translate px val to see wheter it's better performant
 			self.indicator.style.left = (progress * 50).toFixed(2) + '%';
 			// increment the step

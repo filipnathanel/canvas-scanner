@@ -1,15 +1,23 @@
 <div class="scanner">
 	<div class="scan-displays">
-		<canvas class="scan-area" id="scan-area">
+		<canvas class="scan-area" id="scan-area" width="842" height="595">
 		</canvas>
 		<div class="scan-indicator"></div>
 
-		<canvas class="scan-result" id="scan-result"></canvas>
+		<canvas class="scan-result" id="scan-result" width="842" height="595"></canvas>
 	</div>
-	<form>
-		<input type="file" name="testImg" id="img_upload">
-	</form>
 
-	<button id="start_scan">Start Scan</button>
-	<a id="download" class="btn">Download Result</a>
+	<div class="scanner__controls d-all">
+		<div class="g-1of2">
+			<input type="file" id="img_upload" class="fileinput">
+			<label for="img_upload">Choose a file</label>
+			<button id="start_scan">Start Scan</button>
+		</div>
+		<div class="g-1of2">
+			<div class="button">Preview Fullsize</div>
+			<a id="download" class="button">Save</a>
+		</div>
+	</div>
+
+
 </div>

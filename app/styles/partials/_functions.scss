@@ -1,0 +1,38 @@
+/******************************************************************
+Site Name: Glitch Scanner
+Author: Filip Michalski
+
+Stylesheet: Sass Functions
+
+******************************************************************/
+
+/*********************
+COLOR FUNCTIONS
+These are helpful when you're working
+with shadows and such things. It's essentially
+a quicker way to write RGBA.
+
+Example:
+box-shadow: 0 0 4px black(0.3);
+compiles to:
+box-shadow: 0 0 4px rgba(0,0,0,0.3);
+
+*********************/
+
+// black
+@function black($opacity) {
+    @return rgba(0,0,0,$opacity);
+}
+
+// white
+@function white($opacity) {
+    @return rgba(255,255,255,$opacity);
+}
+
+/******************
+POINTS TO REMS
+******************/
+// 1 rem = 12 points
+@function pxToRem($pixels){
+	@return $pixels/16 + rem;
+}

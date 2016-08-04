@@ -1,0 +1,40 @@
+/******************************************************************
+Site Name: Glitch Scanner
+Authors: Filip Michalski
+
+Stylesheet: Variables
+
+We want to make sure this file ONLY
+contains variables that way our files don't get all messy.
+
+******************************************************************/
+
+$white:				#fafafa;
+$black:				#020202;
+$pink:        		#ff2d38;
+$light-blue:        #3799CF;
+$blue:              #2178A8;
+$dark-blue:         #202d38;
+$red: 				#ff3231;
+$sea:				#04e8f6;
+$orange:			#ff8a00;
+$green:             #00e988;
+$light-green:       #00f3cc;
+$light-gray:        #CBCCCD;
+$gray:              #A0A6A9;
+$tan:               #eceee5;
+$yellow:     		#FFE600;
+
+$text-color:        $black;
+$meta-gray:         #c6c6c5;
+
+$link-color:        $pink;
+$link-hover:        #e01e55;
+
+/**
+ * 	BREAKPOINTS
+ */
+$breakpoint-mobile: 	481px;
+$breakpoint-tablet:		768px;
+$breakpoint-desktop:	1030px;
+$breakpoint-wide:		1400px;

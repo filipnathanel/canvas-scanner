@@ -6,4 +6,6 @@ let Globals = {
 	onResize: new onResize()
 };
 
+window.globals = Globals;
+
 export { Globals as default};

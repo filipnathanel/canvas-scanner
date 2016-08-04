@@ -1,0 +1,36 @@
+body {
+	background: $white;
+	font-family: $sans-serif;
+	color: #333;
+}
+
+.browserupgrade {
+	margin: 0.2em 0;
+	background: #ccc;
+	color: #000;
+	padding: 0.2em 0;
+}
+
+.site-header{
+	background:
+	linear-gradient(
+		#CA6BE1,
+		transparent
+	),
+	linear-gradient(
+		-35deg,
+		#0A1938,
+		transparent
+	),
+	linear-gradient(
+		25deg,
+		#EFFB41,
+		transparent
+	);
+background-blend-mode: multiply;
+	color: $white;
+}
+
+.sidebar{
+	padding-right:0;
+}

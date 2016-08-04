@@ -1,0 +1,92 @@
+/******************************************************************
+Site Name: Glitch Scanner
+Author: Filip Michalski
+
+Stylesheet: Button Styles
+
+******************************************************************/
+
+/*********************
+BUTTON DEFAULTS
+We're gonna use a placeholder selector here
+so we can use common styles. We then use this
+to load up the defaults in all our buttons.
+
+*********************/
+%btn {
+
+	@extend .f-size-normal;
+
+	display: inline-block;
+	position: relative;
+	font-family: $sans-serif;
+	text-decoration: none;
+	background-color: transparent;
+	line-height: 1em;
+	font-weight: 400;
+	border: 3px solid white;
+	cursor: pointer;
+	transition: box-shadow 0.15s ease-in-out ;
+	transition: background-color 0.15s ease-in-out ;
+
+  // hovering on the btn
+  &:hover, &:focus {
+    // @extend %box-shadow-0;
+    // background-color: darken($link-color, 10%);
+    background-color: $blue;
+
+  } // end hover
+
+  // clicking on the button
+  &:active {
+    
+  } // end active
+
+  .button__label{
+    display: block;
+    color:$white;
+    letter-spacing:2px;
+    padding:0.5em 0.5em ;
+    font-family: $sans-serif;
+    font-style: normal;
+    // text-transform: uppercase;
+    &:hover, &:focus{
+      color:$white;
+    }
+  }
+
+  a{
+    text-decoration:none;
+  }
+
+} // end .button
+
+.button{
+	@extend %btn;
+}
+
+/**
+ * File Input
+ */
+.fileinput{
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.fileinput + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.fileinput:focus + label,
+.fileinput + label:hover {
+    background-color: red;
+}

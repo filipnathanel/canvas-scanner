@@ -2,16 +2,36 @@
 
 {% block content %}
 
-{% include "partials/scanner/scanner.html" %}
+	<aside class="sidebar d-1of3 cf">
+	    <header class="site-header m-all t-all d-all">
+	        <h1 class="h1 site-title">Glitch Scanner</h1>
+	    </header>
+		<div class="sidebar__item">Load Automation Presets</div>
+	</aside>
 
-<div id="x-controller">
-	{% include "partials/xyController/xyController.html" %}
-</div>
+	<main class="main d-2of3 last-col cf">
+		
+		{% include "partials/scanner/scanner.html" %}
+		
+		<div class="automation g-all">
+			
+			<div id="x-controller">
+				{% include "partials/xyController/xyController.html" %}
+			</div>
 
-<div id="y-controller">
-	{% include "partials/xyController/xyController.html" %}
-</div>
+			<div id="y-controller">
+				{% include "partials/xyController/xyController.html" %}
+			</div>
 
-{% include "partials/contextMenu/contextMenu.html" %}
+			<div id="rotation-controller">
+				{% include "partials/xyController/xyController.html" %}
+			</div>
+
+		</div>
+
+		{% include "partials/contextMenu/contextMenu.html" %}
+		
+	</main>
+
 
 {% endblock %}

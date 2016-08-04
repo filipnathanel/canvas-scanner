@@ -24,37 +24,84 @@
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
     
+
+    
     
 
-<div class="scanner">
+	<aside class="sidebar d-1of3 cf">
+	    <header class="site-header m-all t-all d-all">
+	        <h1 class="h1 site-title">Glitch Scanner</h1>
+	    </header>
+		<div class="sidebar__item">Load Automation Presets</div>
+	</aside>
+
+	<main class="main d-2of3 last-col cf">
+		
+		<div class="scanner">
 	<div class="scan-displays">
-		<canvas class="scan-area" id="scan-area">
+		<canvas class="scan-area" id="scan-area" width="842" height="595">
 		</canvas>
 		<div class="scan-indicator"></div>
 
-		<canvas class="scan-result" id="scan-result"></canvas>
+		<canvas class="scan-result" id="scan-result" width="842" height="595"></canvas>
 	</div>
-	<form>
-		<input type="file" name="testImg" id="img_upload">
-	</form>
 
-	<button id="start_scan">Start Scan</button>
-	<a id="download" class="btn">Download Result</a>
+	<div class="scanner__controls d-all">
+		<div class="g-1of2">
+			<input type="file" id="img_upload" class="fileinput">
+			<label for="img_upload">Choose a file</label>
+			<button id="start_scan">Start Scan</button>
+		</div>
+		<div class="g-1of2">
+			<div class="button">Preview Fullsize</div>
+			<a id="download" class="button">Save</a>
+		</div>
+	</div>
+
+
 </div>
-
-<div id="x-controller">
-	<div class="xy-controller">
+		
+		<div class="automation g-all">
+			
+			<div id="x-controller">
+				<div class="xy-controller">
+	<div class="controls">
+		<div class="control control--enable">enable</div>
+		<div class="control control--reset">reset</div>
+		<div class="control control--load disabled">load</div>
+		<div class="control control--save disabled">save</div>
+	</div>
 	<svg xmlns="http://www.w3.org/2000/svg"></svg>
 </div>
-</div>
+			</div>
 
-<div id="y-controller">
-	<div class="xy-controller">
+			<div id="y-controller">
+				<div class="xy-controller">
+	<div class="controls">
+		<div class="control control--enable">enable</div>
+		<div class="control control--reset">reset</div>
+		<div class="control control--load disabled">load</div>
+		<div class="control control--save disabled">save</div>
+	</div>
 	<svg xmlns="http://www.w3.org/2000/svg"></svg>
 </div>
-</div>
+			</div>
 
-<nav class="context-menu">
+			<div id="rotation-controller">
+				<div class="xy-controller">
+	<div class="controls">
+		<div class="control control--enable">enable</div>
+		<div class="control control--reset">reset</div>
+		<div class="control control--load disabled">load</div>
+		<div class="control control--save disabled">save</div>
+	</div>
+	<svg xmlns="http://www.w3.org/2000/svg"></svg>
+</div>
+			</div>
+
+		</div>
+
+		<nav class="context-menu">
   <ul class="context-menu__items">
     <li class="context-menu__item">
       <a href="#" class="context-menu__link">
@@ -74,6 +121,9 @@
     </li>
   </ul>
 </nav>
+		
+	</main>
+
 
 
     

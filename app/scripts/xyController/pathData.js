@@ -24,6 +24,7 @@ export default class PathData  {
 	        }
 	        return a.x < b.x ? -1 : 1;
 		});
+		this.logged = false;
 
 		// this.onPointLeftClick = this.onPointLeftClick.bind(this);
 
@@ -136,6 +137,7 @@ export default class PathData  {
 
 	getPathAtX(x){
 
+
 		var dataLen = this.data.array.length;
 
 		for (var i = 0; i < dataLen; i++) {
@@ -152,6 +154,7 @@ export default class PathData  {
 				return this.data.array[dataLen - 1];
 			}	
 		}
+
 		
 	}
 

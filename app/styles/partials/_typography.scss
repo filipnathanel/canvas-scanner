@@ -1,0 +1,236 @@
+/******************************************************************
+Site Name: MoS Publishing
+Author: Filip Michalski | Kind Studio
+Stylesheet: Typography
+
+******************************************************************/
+
+// font stacks
+$sans-serif:    "Helvetica Neue", Helvetica, Arial, sans-serif;
+$serif:         "Georgia", Cambria, Times New Roman, Times, serif;
+
+/*
+some nice typographical defaults
+more here: http://www.newnet-soft.com/blog/csstypography
+*/
+p {
+  -ms-word-wrap: break-word;
+  word-break: break-word; //non-standart css for webkit
+  word-wrap: break-word;
+  // cleaning up the ragged lines and breaks
+  -webkit-hyphens: none;
+     -moz-hyphens: none;
+          hyphens: none;
+  // sets a minimum number of characters before and after the break
+  -webkit-hyphenate-before: 2;
+   -webkit-hyphenate-after: 3;
+           hyphenate-lines: 3;
+  // enabling fancy ligatures when available
+  -webkit-font-feature-settings: "liga", "dlig";
+   -moz-font-feature-settings: "liga=1, dlig=1";
+      -ms-font-feature-settings: "liga", "dlig";
+       -o-font-feature-settings: "liga", "dlig";
+          font-feature-settings: "liga", "dlig";
+}
+
+////////////////////
+// SIZES - MOBILE //
+////////////////////
+
+$singularity-mobile  : pxToRem(30); // h1,
+$huge-mobile         : pxToRem(24); // h2
+$big-mobile          : pxToRem(20); // button
+$medium-mobile       : pxToRem(18); //
+$normy-mobile        : pxToRem(17); // h4
+$normal-mobile       : pxToRem(15); // body, header description
+$small-mobile        : pxToRem(14);
+
+////////////////////
+// SIZES - TABLET //
+////////////////////
+
+$singularity-tablet  : pxToRem(32);
+$huge-tablet         : pxToRem(28);
+$big-tablet          : pxToRem(20);
+$medium-tablet       : pxToRem(19);
+$normy-tablet        : pxToRem(18);
+$normal-tablet       : pxToRem(16);
+$small-tablet        : pxToRem(14);
+
+//////////////////////
+// SIZES - DESKTOP  //
+//////////////////////
+
+$singularity-desktop : pxToRem(38);
+$huge-desktop        : pxToRem(32);
+$big-desktop         : pxToRem(22);
+$medium-desktop      : pxToRem(22);
+$normy-desktop       : pxToRem(20);
+$normal-desktop      : pxToRem(17);
+$small-desktop       : pxToRem(15);
+
+///////////////////
+// SIZES - WIDE  //
+///////////////////
+
+$singularity-wide    : pxToRem(40);
+$huge-wide           : pxToRem(34);
+$big-wide            : pxToRem(24);
+$medium-wide         : pxToRem(22);
+$normy-wide          : pxToRem(20);
+$normal-wide         : pxToRem(17);
+$small-wide          : pxToRem(14);
+
+.f-size-singularity {
+  font-size: $singularity-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $singularity-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $singularity-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $singularity-wide;
+  }
+}
+
+.f-size-huge {
+  font-size: $huge-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $huge-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $huge-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $huge-wide;
+  }
+}
+
+.f-size-big {
+  font-size: $big-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $big-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $big-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $big-wide;
+  }
+}
+
+.f-size-medium {
+  font-size: $medium-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $medium-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $medium-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $medium-wide;
+  }
+}
+
+.f-size-normy {
+  font-size: $normy-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $normy-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $normy-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $normy-wide;
+  }
+}
+
+
+.f-size-normal {
+  font-size: $normal-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $normal-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $normal-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $normal-wide;
+  }
+}
+
+.f-size-small {
+  font-size: $small-mobile;
+  @media screen and (min-width:$breakpoint-tablet){
+    font-size : $small-tablet;
+  }
+  @media screen and (min-width:$breakpoint-desktop){
+    font-size : $small-desktop;
+  }
+  @media screen and (min-width:$breakpoint-wide){
+    font-size : $small-wide;
+  }
+}
+
+
+
+/******************************************************************
+H1, H2, H3, H4, H5 STYLES
+******************************************************************/
+
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5 {
+  text-rendering: optimizelegibility;
+  font-weight: 500;
+
+  /* removing text decoration from all headline links */
+  a {
+    text-decoration: none;
+  }
+}
+
+
+h1, .h1 {
+  @extend .f-size-singularity;
+  line-height: 1em;
+  margin: 0.60em 0;
+}
+
+h2, .h2 {
+  @extend .f-size-huge;
+  line-height: 1.3em;
+  margin-bottom: 1em;
+  
+}
+
+h3, .h3 {
+  @extend .f-size-big;
+  line-height: 1.3em;
+}
+
+h4, .h4 {
+  @extend .f-size-normy;
+  
+}
+
+h5, .h5 {
+  @extend .f-size-normal;
+  font-weight: 700;
+  margin: 0;
+}
+
+/************
+COPY
+So the paragraphs are WAAAY more readible
+only applies to paragraphs within WRAP
+*************/
+
+p,.p{
+  @extend .f-size-normal;
+ 
+}
+p{
+  margin: 1.5em 0;
+  line-height: 1.3em;
+
+}

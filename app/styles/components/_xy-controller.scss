@@ -1,13 +1,14 @@
 .xy-controller{
-	width:50%;
+	float:left;
 	background-color: #ccc;
 	border: #777;
 	min-height: 100px;
+	width:100%;
 
 	svg{
 		display:block;
 		border:1px solid #333;
-		width:100%;
+		width:calc(100% - 50px);
 		height:100%;
 	}
 	circle{
@@ -20,4 +21,14 @@
 
 	.slope-controller{
 		cursor: n-resize;
+	}
+
+	.controls{
+		float:left;
+		width:50px;
+		height:50px;
+	}
+
+	.control{
+
 	}
