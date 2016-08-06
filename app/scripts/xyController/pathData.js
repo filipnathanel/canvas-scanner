@@ -56,7 +56,7 @@ export default class PathData  {
 		});
 		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
 
-		this.data.insert(point);
+		var x = this.data.insert(point);
 
 		this.redraw();
 	}
@@ -96,16 +96,20 @@ export default class PathData  {
 
 		function dragHandler(e) {
 
+			var pointLocation = self.data.search(point);
+
 			self.data.remove(point);
 
 			var movePos = SVGUtils.mousePos(e, self.$svg),
 				xPos = movePos.x + posDiff.x,
 				yPos = movePos.y + posDiff.y;
 
-			point.setOption('cx', xPos);
+			// don't change the xPos for automation start and end
+			if ( pointLocation != 0 && pointLocation < self.data.array.length){
+				point.setOption('cx', xPos);
+				point.x = xPos;
+			}
 			point.setOption('cy', yPos);
-
-			point.x = xPos;
 			point.y = yPos;
 
 			var newPoint = point;
