@@ -135,7 +135,7 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 10000;
+		var duration = 1000;
 
 		var currentStep = 0;
 		var newStep = 0;
@@ -158,6 +158,7 @@ export default class Scanner {
 
 			// move the image
 			var change = self.automation.getValueAtPercent(progress);
+
 			self.scanArea.moveImage(change.x, change.y, change.rotation);
 
 			// need to experiment with transform translate px val to see wheter it's better performant

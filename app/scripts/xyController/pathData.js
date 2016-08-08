@@ -10,6 +10,7 @@ import Path from './Path';
  */
 
 export default class PathData  {
+
 	constructor(svg){
 
 		this.$svg = svg;
@@ -24,10 +25,37 @@ export default class PathData  {
 	        }
 	        return a.x < b.x ? -1 : 1;
 		});
-		this.logged = false;
 
-		// this.onPointLeftClick = this.onPointLeftClick.bind(this);
+		this.initEvents();
 
+	}
+
+	get svgWidth(){ return this.$svg.width.baseVal.value ;}
+	get svgHeight(){ return this.$svg.height.baseVal.value ;}
+
+	initEvents(){
+		this.$svg.addEventListener('contextmenu', (e) => { this.onAreaRightClick(e); });
+	}
+
+
+	/**
+	 * TRANSORMATIONS FUNCTIONS
+	 */
+
+	absWToRel(px){
+		return px * 100 / this.svgWidth;
+	}
+
+	absHToRel(px){
+		return px * 100 / this.svgHeight;
+	}
+
+	relWToAbs(percent){
+		return percent/100 * this.svgWidth;
+	}
+
+	relHToAbs(percent){
+		return percent/100 * this.svgHeight;
 	}
 
 	/**
@@ -38,8 +66,8 @@ export default class PathData  {
 	addPoint(x, y, type = 'linear'){
 
 		var point = new Circle({
-			cx: x,
-			cy: y,
+			cx: this.relWToAbs(x),
+			cy: this.relHToAbs(y),
 			r: 6,
 			fill: 'red',
 		}, this.$svg);
@@ -56,9 +84,9 @@ export default class PathData  {
 		});
 		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
 
-		var x = this.data.insert(point);
+		this.data.insert(point);
 
-		this.redraw();
+		this.redrawPaths();
 	}
 
 	removePoint(point){
@@ -74,8 +102,14 @@ export default class PathData  {
 		}
 		this.data.remove(point);
 
-		this.redraw();
+		this.redrawPaths();
 
+	}
+
+	onAreaRightClick(e){
+		e.preventDefault();
+		var mousePos = SVGUtils.mousePos(e, this.$svg);
+		this.addPoint(this.absWToRel(mousePos.x), this.absHToRel(mousePos.y), 'quadratic');
 	}
 
 	/**
@@ -107,16 +141,16 @@ export default class PathData  {
 			// don't change the xPos for automation start and end
 			if ( pointLocation != 0 && pointLocation < self.data.array.length){
 				point.setOption('cx', xPos);
-				point.x = xPos;
+				point.x = self.absWToRel(xPos);
 			}
 			point.setOption('cy', yPos);
-			point.y = yPos;
+			point.y = self.absHToRel(yPos);
 
 			var newPoint = point;
 
 			self.data.insert(newPoint);
 
-			self.redraw();
+			self.redrawPaths();
 
 		}
 
@@ -132,6 +166,7 @@ export default class PathData  {
 	}
 
 	onPointRightClick(e, point){
+
 		e.preventDefault();
 		e.stopPropagation();
 
@@ -139,8 +174,7 @@ export default class PathData  {
 
 	}
 
-	getPathAtX(x){
-
+	getPathAtPercent(x){
 
 		var dataLen = this.data.array.length;
 
@@ -158,7 +192,6 @@ export default class PathData  {
 				return this.data.array[dataLen - 1];
 			}	
 		}
-
 		
 	}
 
@@ -203,10 +236,10 @@ export default class PathData  {
 	createPath(pathFrom, pathTo){
 
 		var type = pathFrom.type,
-			x1 = pathFrom.x,
-			y1 = pathFrom.y,
-			x2 = pathTo.x,
-			y2 = pathTo.y,
+			x1 = this.relWToAbs(pathFrom.x),
+			y1 = this.relHToAbs(pathFrom.y),
+			x2 = this.relWToAbs(pathTo.x),
+			y2 = this.relHToAbs(pathTo.y),
 			slope = pathFrom.slope;
 
 		switch(type){
@@ -278,7 +311,7 @@ export default class PathData  {
 						e.preventDefault();
 						e.stopPropagation();
 						this.data.array[i].slope = 0;
-						this.redraw();
+						this.redrawPaths();
 					});
 
 					this.data.array[i].slopeControl = slopeControl;
@@ -326,7 +359,7 @@ export default class PathData  {
 				}
 			mouseCache = yPos;
 
-			self.redraw();
+			self.redrawPaths();
 
 		}
 
@@ -358,10 +391,17 @@ export default class PathData  {
 	}
 
 
-	redraw(){
-		// console.log(this.data)
+	redrawPaths(){
 		this.addPaths();
 		this.addControls();
+	}
+
+	redrawPoints(){
+
+		this.data.array.forEach( (point) => {
+			point.setOption('cx', this.relWToAbs(point.x));
+			point.setOption('cy', this.relHToAbs(point.y))
+		});
 	}
 
 }

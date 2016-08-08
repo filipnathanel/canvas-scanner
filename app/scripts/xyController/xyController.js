@@ -18,20 +18,16 @@ export default class XYController{
 		this.$el = utils.getEl('.xy-controller', this.$wrap);
 		this.$svg = utils.getEl('svg', this.$el);
 
-		this.svgWidth = this.$svg.width.baseVal.value;
-		this.svgHeight = this.$svg.height.baseVal.value;
-
 		this.pathData = new PathData( this.$svg );
 		this.pointContextMenu = new ContextMenu();
 
 		this.init(options);
 		this.initEvents();
 
-		this.defaults = {
-			range:[-50,50]
-		};
-
 	}
+
+	get svgWidth(){ return this.$svg.width.baseVal.value ;}
+	get svgHeight(){ return this.$svg.height.baseVal.value ;}
 
 	init(options){
 
@@ -40,14 +36,28 @@ export default class XYController{
 		// initialise the viewbox for scaling
 		// this.$svg.setAttribute('width', this.svgWidth);
 		// this.$svg.setAttribute('height', this.svgHeight);
-		this.$svg.setAttribute('viewBox', '0 0 ' + this.svgWidth + ' ' + this.svgHeight);
-		this.$svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+		// this.$svg.setAttribute('viewBox', '0 0 ' + this.svgWidth + ' ' + this.svgHeight);
+		// this.$svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
 		// this.$svg.setAttribute('preserveAspectRatio', 'none');
 
 		// add the automation points at the beginning and at the end of the control space
-		this.addPoint(0,this.svgHeight/2);
-		this.addPoint(this.svgWidth, this.svgHeight/2, 'linear');
+		this.addPoint(0, 50);
+		this.addPoint(100, 50, 'linear');
 
+	}
+
+	initEvents(){
+		// this.$svg.addEventListener('click', (e) => { this.onLeftClick(e); });
+		// this.$svg.addEventListener('contextmenu', (e) => { this.onRightClick(e); });
+
+		Globals.onResize.add( () => {this.onResize()}  );
+	}
+
+	onLeftClick(e){}
+
+	onResize(){
+		this.pathData.redrawPoints();
+		this.pathData.redrawPaths();
 	}
 
 	refresh(){
@@ -56,11 +66,17 @@ export default class XYController{
 			this.pathData.remove(point);
 		});
 
-		this.addPoint(0,this.svgHeight/2);
-		this.addPoint(this.svgWidth, this.svgHeight/2, 'linear');
+		this.addPoint(0, 50, 'quadratic');
+		this.addPoint(100, 50);
 		
 	}
 
+	/**
+	 * short interface for PathData 
+	 * @param {int} x    	x pos expressed in percent
+	 * @param {int} y    	y pos expiressd in percent
+	 * @param {string} type connection type
+	 */
 	addPoint(x, y, type = 'quadratic'){
 		this.pathData.addPoint(x, y, type);
 	}
@@ -68,61 +84,32 @@ export default class XYController{
 	getValueAtPercent( percent ){
 
 		// simply calculate the x coordinate at which we will be looking for automation value
-		var svgX = this.svgWidth * percent < this.svgWidth ? this.svgWidth * percent : this.svgWidth ;
+		var percent = percent < 1 ? percent * 100 : 100;
+
 		// get the path corresponding for the given svgX value
-		var currentPath = this.pathData.getPathAtX(svgX),
+		var currentPath = this.pathData.getPathAtPercent(percent),
 			currentPathIndex = this.pathData.data.search(currentPath),
 			nextPathIndex = currentPathIndex + 1;
 
 		// if currentPath isn't the last one
 		if (this.pathData.data.array[nextPathIndex]){
 			var xWidth = this.pathData.data.array[nextPathIndex].x - currentPath.x,
-				relativeX = svgX - currentPath.x,
+				relativeX = percent - currentPath.x,
 				xPercent = relativeX / xWidth;
 		}else{
-			var val = currentPath.y / this.svgHeight;
+			var val = currentPath.y/100;
 		}
 
 		var $path = this.pathData.data.array[currentPathIndex].path;
 
 		if ($path){
 			var coords = $path.el.getPointAtLength($path.el.getTotalLength() * xPercent);
-			var val = coords.y / this.svgHeight
+			var val = coords.y / this.svgHeight;
 		}
 
 		if (this.options.invert === true) return 1 - val;
 		return val;
 
 	}
-
-
-	initEvents(){
-		this.$svg.addEventListener('mousemove', (e) => { this.onMouseMove(e); });
-		this.$svg.addEventListener('click', (e) => { this.onLeftClick(e); });
-		this.$svg.addEventListener('contextmenu', (e) => { this.onRightClick(e); });
-	}
-
-	onLeftClick(e){}
-
-	onRightClick(e){
-		e.preventDefault();
-		console.log('czo');
-		var mousePos = SVGUtils.mousePos(e, this.$svg);
-		this.addPoint(mousePos.x, mousePos.y);
-
-	}
-
-	onMouseMove(e){
-
-		var mousePos = SVGUtils.mousePos(e, this.$svg);
-
-		switch(this.state){
-			case 'dragging':
-				console.log('dragging');
-				break;
-			default:
-		}
-	}
-
 
 }
