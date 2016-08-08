@@ -12,7 +12,7 @@ import ContextMenu from '../contextMenu/contextMenu';
 
 export default class XYController{
 
-	constructor(controller){
+	constructor(controller, options){
 		
 		this.$wrap = utils.getEl(controller);
 		this.$el = utils.getEl('.xy-controller', this.$wrap);
@@ -24,17 +24,41 @@ export default class XYController{
 		this.pathData = new PathData( this.$svg );
 		this.pointContextMenu = new ContextMenu();
 
-		this.init();
+		this.init(options);
 		this.initEvents();
+
+		this.defaults = {
+			range:[-50,50]
+		};
 
 	}
 
-	init(){
+	init(options){
+
+		this.options = utils.extend( this.defaults, options);
+
+		// initialise the viewbox for scaling
+		// this.$svg.setAttribute('width', this.svgWidth);
+		// this.$svg.setAttribute('height', this.svgHeight);
+		this.$svg.setAttribute('viewBox', '0 0 ' + this.svgWidth + ' ' + this.svgHeight);
+		this.$svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+		// this.$svg.setAttribute('preserveAspectRatio', 'none');
 
 		// add the automation points at the beginning and at the end of the control space
 		this.addPoint(0,this.svgHeight/2);
 		this.addPoint(this.svgWidth, this.svgHeight/2, 'linear');
 
+	}
+
+	refresh(){
+
+		this.pathData.array.forEach( (point) => {
+			this.pathData.remove(point);
+		});
+
+		this.addPoint(0,this.svgHeight/2);
+		this.addPoint(this.svgWidth, this.svgHeight/2, 'linear');
+		
 	}
 
 	addPoint(x, y, type = 'quadratic'){
@@ -45,35 +69,34 @@ export default class XYController{
 
 		// simply calculate the x coordinate at which we will be looking for automation value
 		var svgX = this.svgWidth * percent < this.svgWidth ? this.svgWidth * percent : this.svgWidth ;
-		// get the path that is present and controlling for given svgX value
+		// get the path corresponding for the given svgX value
 		var currentPath = this.pathData.getPathAtX(svgX),
 			currentPathIndex = this.pathData.data.search(currentPath),
 			nextPathIndex = currentPathIndex + 1;
 
 		// if currentPath isn't the last one
 		if (this.pathData.data.array[nextPathIndex]){
-			var xWidth = this.pathData.data.array[nextPathIndex].x - currentPath.x;
-
-			// get x value starting from the start of the current path
-			var relativeX = svgX - currentPath.x,
-			// get progress percent for current path
+			var xWidth = this.pathData.data.array[nextPathIndex].x - currentPath.x,
+				relativeX = svgX - currentPath.x,
 				xPercent = relativeX / xWidth;
 		}else{
-			return currentPath.y / this.svgHeight;
+			var val = currentPath.y / this.svgHeight;
 		}
 
-		var paath = this.pathData.data.array[currentPathIndex].path;
+		var $path = this.pathData.data.array[currentPathIndex].path;
 
-		if (paath){
-			var coords = paath.el.getPointAtLength(paath.el.getTotalLength() * xPercent);
-			return coords.y / this.svgHeight;
+		if ($path){
+			var coords = $path.el.getPointAtLength($path.el.getTotalLength() * xPercent);
+			var val = coords.y / this.svgHeight
 		}
+
+		if (this.options.invert === true) return 1 - val;
+		return val;
 
 	}
 
 
 	initEvents(){
-
 		this.$svg.addEventListener('mousemove', (e) => { this.onMouseMove(e); });
 		this.$svg.addEventListener('click', (e) => { this.onLeftClick(e); });
 		this.$svg.addEventListener('contextmenu', (e) => { this.onRightClick(e); });
