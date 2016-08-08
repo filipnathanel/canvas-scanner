@@ -6,5 +6,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	var fileInput = new FileInput('#img_upload');
 		
 	fileInput.onFileChanged.add( ( file ) => { glitchScanner.addFile(file) });
+	fileInput.onWrongFileType.add( ( result ) => { alert( result.type + ' is not allowed file type, try jpeg or png');});
 
 });	
