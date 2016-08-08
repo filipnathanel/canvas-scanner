@@ -1,15 +1,31 @@
+.automation{
+	border-top:1px solid $black;
+}
+
 .xy-controller{
 	float:left;
-	background-color: #ccc;
+	background-color: $white;
 	border: #777;
-	min-height: 100px;
 	width:100%;
+	border-left:1px solid $black;
+	border-right:1px solid $black;
+	border-bottom:1px solid $black;
+
+	&.active{
+		
+	}
+
+	&.disabled{
+		svg{
+			height:50px
+		}
+	}
 
 	svg{
 		display:block;
-		border:1px solid #333;
 		width:calc(100% - 50px);
 		height:100%;
+		border-left:1px solid $black;
 	}
 	circle{
 		border:1px solid white;

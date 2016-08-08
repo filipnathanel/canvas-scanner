@@ -1,15 +1,18 @@
 .scanner{
-	
 }
 	.scan-displays{
+		border:1px solid $black;
 		position: relative;
+
 		canvas{
 			display:block;
+			// float:left;
 		}
 	}
 	.scan-area{
-		border-bottom: 1px solid #777;
+		border-right: 1px solid #777;
 		width:50%;
+		float:left;
 	}
 		.scan-indicator{
 			position: absolute;
@@ -21,10 +24,11 @@
 			border-right: 1px solid blue;
 		}
 	.scan-result{
-		position: absolute;
+		// position: absolute;
+		float:right;
 		width:50%;
 		bottom:0;
 		right:0;
 		background-color: #fff;
-		border:1px solid #777;
+		// border:1px solid #777;
 	}

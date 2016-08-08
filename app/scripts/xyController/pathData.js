@@ -359,6 +359,7 @@ export default class PathData  {
 
 
 	redraw(){
+		// console.log(this.data)
 		this.addPaths();
 		this.addControls();
 	}

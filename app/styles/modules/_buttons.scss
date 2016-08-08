@@ -22,18 +22,19 @@ to load up the defaults in all our buttons.
 	font-family: $sans-serif;
 	text-decoration: none;
 	background-color: transparent;
-	line-height: 1em;
+	line-height: 1.5em;
 	font-weight: 400;
-	border: 3px solid white;
 	cursor: pointer;
-	transition: box-shadow 0.15s ease-in-out ;
 	transition: background-color 0.15s ease-in-out ;
+  transition: color 0.15s ease-in-out ;
+  padding: 0.5em 0.7em;
 
   // hovering on the btn
   &:hover, &:focus {
     // @extend %box-shadow-0;
     // background-color: darken($link-color, 10%);
-    background-color: $blue;
+    background-color: darken($white, 10%);
+    // color:white;
 
   } // end hover
 
@@ -41,19 +42,6 @@ to load up the defaults in all our buttons.
   &:active {
     
   } // end active
-
-  .button__label{
-    display: block;
-    color:$white;
-    letter-spacing:2px;
-    padding:0.5em 0.5em ;
-    font-family: $sans-serif;
-    font-style: normal;
-    // text-transform: uppercase;
-    &:hover, &:focus{
-      color:$white;
-    }
-  }
 
   a{
     text-decoration:none;
@@ -78,15 +66,5 @@ to load up the defaults in all our buttons.
 }
 
 .fileinput + label {
-    font-size: 1.25em;
-    font-weight: 700;
-    color: white;
-    background-color: black;
-    display: inline-block;
-    cursor: pointer;
-}
-
-.fileinput:focus + label,
-.fileinput + label:hover {
-    background-color: red;
+  @extend %btn;
 }

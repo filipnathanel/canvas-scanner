@@ -66,8 +66,8 @@ $huge-desktop        : pxToRem(32);
 $big-desktop         : pxToRem(22);
 $medium-desktop      : pxToRem(22);
 $normy-desktop       : pxToRem(20);
-$normal-desktop      : pxToRem(17);
-$small-desktop       : pxToRem(15);
+$normal-desktop      : pxToRem(13);
+$small-desktop       : pxToRem(11);
 
 ///////////////////
 // SIZES - WIDE  //
@@ -78,8 +78,8 @@ $huge-wide           : pxToRem(34);
 $big-wide            : pxToRem(24);
 $medium-wide         : pxToRem(22);
 $normy-wide          : pxToRem(20);
-$normal-wide         : pxToRem(17);
-$small-wide          : pxToRem(14);
+$normal-wide         : pxToRem(15);
+$small-wide          : pxToRem(12);
 
 .f-size-singularity {
   font-size: $singularity-mobile;
