@@ -24,11 +24,7 @@ export default class ScanArea extends Canvas {
 
 		Globals.onResize.add(() => { 
 			console.log('scanArea onresize trigerred');
-			// this.canvas.width = Globals.viewport.width;
 		});
-
-		// window.czoo = this.setDpi;
-		
 
 	}
 
@@ -60,10 +56,8 @@ export default class ScanArea extends Canvas {
 
 		if(rotation){
 
-			console.log(xChange);
-
 			this.context.save();
-			var angle = -180 + 360 * rotation,
+			var angle = -45 + 90 * rotation,
 				toRadians =  Math.PI/180;
 
 			this.context.translate( (this.canvas.width)/2 + xChange - (this.canvas.width - this.image.width )/2, (this.canvas.height)/2 + yChange - (this.canvas.height - this.image.height )/2 );
