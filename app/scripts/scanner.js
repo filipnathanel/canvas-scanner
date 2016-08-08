@@ -37,6 +37,8 @@ export default class Scanner {
 		// set the default dpi value
 		this.setDPI(this.DPI);
 		this.initEvents();
+
+		this.scanning = false;
 	}
 
 	// events initialisation
@@ -47,6 +49,8 @@ export default class Scanner {
 
 		Globals.onResize.add( () => { this.scanArea.redraw() } );
 	}
+
+	// onResize(){}
 
 	onImageUpdated(e){
 
@@ -114,10 +118,9 @@ export default class Scanner {
 
 	}
 
-
 	// scan trigger
 	onScanClick(e){
-		if( this.scanArea.imageLoaded === true ){
+		if( this.scanArea.imageLoaded === true && this.scanning === false ){
 			this.scan();
 		}else{
 			console.log('no image present in the scanner');
@@ -126,6 +129,8 @@ export default class Scanner {
 	}
 
 	scan(){
+
+		this.scanning = true;
 
 		var self = this;
 
@@ -162,6 +167,8 @@ export default class Scanner {
 
 			if ( progress < 1 ){
 				window.requestAnimationFrame(scanLoop);
+			}else{
+				self.scanning = false;
 			}
 
 		}
