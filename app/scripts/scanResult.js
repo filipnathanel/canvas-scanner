@@ -18,7 +18,7 @@ export default class ScanResult extends Canvas {
 	init(){
 
 		this.setDPI();
-		this.downloadButton = utils.getEl('#download', this.context)
+		this.downloadButton = utils.getEl('#download-image', this.context)
 		console.log(this.downloadButton);
 		// this.canvas.width = Globals.viewport.width;
 		// this.canvas.height = Globals.viewport.height / 2 ;

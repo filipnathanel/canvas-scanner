@@ -1,0 +1,52 @@
+$timeline-height: 35px;
+
+.automation{
+	
+	&__top-panel{
+		border-bottom:1px solid $border-color;
+		height: $timeline-height;
+	}
+		
+		&__header, &__timeline{
+			float:left;
+			@extend .f-size-small;
+		}
+
+		&__header{
+			width:85px;
+			line-height:35px;
+			text-align:center;
+			border-right: 1px solid $black;
+		}
+
+		&__timeline{
+			position: relative;
+			width: calc( 100% - 85px );
+		}
+		
+}
+
+	.timeline__indicator{
+		width: 1px;
+		height: $timeline-height - 25;
+		background-color:$black;
+		position: absolute;
+		margin-left: -0.5px;
+		bottom: -$timeline-height;
+
+		@for $i from 1 through 9{
+			&:nth-of-type(#{$i}){
+				left: #{$i}0%;
+				&:before{
+					content: '#{$i}0%';
+					position: absolute;
+					top: -1.3em;
+					left: -0.8em;
+					width:1em;
+					height:1em;
+					display:block;
+				}
+			}
+		}
+
+	}

@@ -14,12 +14,18 @@ export default class XYController{
 
 	constructor(controller, options){
 		
+		this.cssClass = 'xy-controller';
+
 		this.$wrap = utils.getEl(controller);
-		this.$el = utils.getEl('.xy-controller', this.$wrap);
-		this.$svg = utils.getEl('svg', this.$el);
+		this.$el = utils.getEl('.' + this.cssClass, this.$wrap);
+		this.$svg = utils.getEl('.' + this.cssClass +'__area', this.$el);
 
 		this.pathData = new PathData( this.$svg );
 		this.pointContextMenu = new ContextMenu();
+
+		// buttons
+		this.$controls = utils.getEl('.' + this.cssClass + '__controls', this.$el);
+		this.$refresh = utils.getEl('.control--refresh', this.$controls);
 
 		this.init(options);
 		this.initEvents();
@@ -33,13 +39,6 @@ export default class XYController{
 
 		this.options = utils.extend( this.defaults, options);
 
-		// initialise the viewbox for scaling
-		// this.$svg.setAttribute('width', this.svgWidth);
-		// this.$svg.setAttribute('height', this.svgHeight);
-		// this.$svg.setAttribute('viewBox', '0 0 ' + this.svgWidth + ' ' + this.svgHeight);
-		// this.$svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-		// this.$svg.setAttribute('preserveAspectRatio', 'none');
-
 		// add the automation points at the beginning and at the end of the control space
 		this.addPoint(0, 50);
 		this.addPoint(100, 50, 'linear');
@@ -47,10 +46,12 @@ export default class XYController{
 	}
 
 	initEvents(){
-		// this.$svg.addEventListener('click', (e) => { this.onLeftClick(e); });
-		// this.$svg.addEventListener('contextmenu', (e) => { this.onRightClick(e); });
-
 		Globals.onResize.add( () => {this.onResize()}  );
+
+		this.$refresh.addEventListener('click', (e)=>{
+			this.refresh();
+		});
+
 	}
 
 	onLeftClick(e){}
@@ -62,12 +63,16 @@ export default class XYController{
 
 	refresh(){
 
-		this.pathData.array.forEach( (point) => {
-			this.pathData.remove(point);
-		});
+		var arrLen = this.pathData.data.array.length;
 
-		this.addPoint(0, 50, 'quadratic');
-		this.addPoint(100, 50);
+		// as the Path Data is self ordering after remobing it's items
+		// we only have to remove first item.
+		while( this.pathData.data.array.length > 0 ){
+			this.pathData.removePoint(this.pathData.data.array[0]);
+		}
+
+		this.addPoint(0, 50);
+		this.addPoint(100, 50, 'linear');
 		
 	}
 

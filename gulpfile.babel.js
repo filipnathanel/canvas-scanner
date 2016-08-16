@@ -1,16 +1,16 @@
 // generated on 2016-07-06 using generator-webapp 2.1.0
-const gulp = require('gulp');
-const gulpLoadPlugins = require('gulp-load-plugins');
-const browserSync = require('browser-sync');
-const del = require('del');
-const wiredep = require('wiredep').stream;
+import gulp from 'gulp';
+import gulpLoadPlugins from 'gulp-load-plugins';
+import browserSync from 'browser-sync';
+import del from 'del';
+import {stream as wiredep} from 'wiredep';
+import webpackStream from 'webpack-stream';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
-const webpackStream = require('webpack-stream');
 
 gulp.task('styles', () => {
-  return gulp.src('app/styles/main.scss')
+  return gulp.src('app/styles/*.scss')
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.sass.sync({
@@ -94,8 +94,14 @@ gulp.task('html', ['styles', 'scripts'], () => {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('images', () => {
-  return gulp.src('app/images/**/*')
+gulp.task('icons', () =>{
+  return gulp.src(['app/icons/**/*'])
+    .pipe( $.svgstore())
+    .pipe(gulp.dest('app/images'));
+});
+
+gulp.task('images', ['icons'], () => {
+  return gulp.src(['app/images/**/*'])
     .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true,

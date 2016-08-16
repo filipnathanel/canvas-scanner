@@ -23,6 +23,7 @@ export default class Automation {
 		this.disabledHeight = 50;
 		this.activeController = null
 
+
 		this.init();
 
 	}
@@ -30,13 +31,15 @@ export default class Automation {
 	init(){
 		this.initEvents();
 		this.layout();
+
+		this.setActiveController();
 	}
 
 	initEvents(){
 
 		this.controllers.forEach((controller, i) => {
 			utils.getEl('.control--enable', controller.$el).addEventListener('click', (e)=>{
-				// this.setActiveController(i);
+				this.setActiveController(i);
 			});
 
 		});
@@ -70,12 +73,19 @@ export default class Automation {
 
 		this.controllers.forEach((controller, i) => {
 			if (this.activeController === i){
-				controller.$el.classList.add('active');
-				controller.$el.classList.remove('disabled');
+				controller.$el.classList.add( controller.cssClass + '--active');
+				controller.$el.classList.remove( controller.cssClass + '--disabled');
 			}else{
-				controller.$el.classList.add('disabled');
-				controller.$el.classList.remove('active');
+				controller.$el.classList.add( controller.cssClass + '--disabled');
+				controller.$el.classList.remove( controller.cssClass + '--active');
 			}
+
+			// let's allow the paint to take effect 
+			setTimeout( ()=>{
+				controller.pathData.redrawPoints();
+				controller.pathData.redrawPaths();
+			} )
+
 		});
 	}
 

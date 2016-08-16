@@ -32,12 +32,13 @@
 	    <header class="site-header m-all t-all d-all">
 	        <h1 class="h1 site-title">Glitch Scanner</h1>
 	    </header>
-		<div class="sidebar__item">Load Automation Presets</div>
+		<!-- <div class="sidebar__item">Load Automation Presets</div> -->
 	</aside>
 
 	<main class="main d-2of3 last-col cf">
 		
 		<div class="scanner g-all">
+
 	<div class="scan-displays g-all">
 		<canvas class="scan-area" id="scan-area" width="842" height="595">
 		</canvas>
@@ -54,7 +55,7 @@
 		</div>
 		<div class="g-1of2">
 			<div class="button">Preview Fullsize</div>
-			<a id="download" class="button">Save</a>
+			<a id="download-image" class="button">Save</a>
 		</div>
 	</div>
 
@@ -63,40 +64,228 @@
 		
 		<div class="automation g-all">
 			
+			<div class="automation__top-panel g-all">
+				
+				<div class="automation__header">
+					automation	
+				</div>
+
+				<div class="automation__timeline">
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+					<div class="timeline__indicator"></div>
+				</div>
+
+			</div>
+			
 			<div id="x-controller">
-				<div class="xy-controller">
-	<div class="controls">
-		<div class="control control--enable">enable</div>
-<!-- 		<div class="control control--reset">reset</div>
-		<div class="control control--load disabled">load</div>
-		<div class="control control--save disabled">save</div> -->
-	</div>
-	<svg xmlns="http://www.w3.org/2000/svg"></svg>
+				
+
+<div class="xy-controller">
+	<div class="xy-controller__controls">
+		<div class="control control--enable">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#edit"></use>
+	</svg>
 </div>
+
+</div>
+ 		<div class="control control--refresh">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#repeat"></use>
+	</svg>
+</div>
+
+</div>
+		<div class="control control--save">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#save"></use>
+	</svg>
+</div>
+
+</div> 
+ 		<div class="control control--load">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#download"></use>
+	</svg>
+</div>
+
+</div>
+	</div>
+	<div class="y-legend">
+		
+		
+
+		<div class="y-legend__point">
+				  100%
+			</div><div class="y-legend__point">
+				  50%
+			</div><div class="y-legend__point">
+				  0%
+			</div><div class="y-legend__point">
+				  -50%
+			</div><div class="y-legend__point">
+				  -100%
+			</div>
+
+	</div>
+	<svg xmlns="http://www.w3.org/2000/svg" class="xy-controller__area"></svg>
+	<div class="xy-controller__name">
+		x movement
+	</div>
+</div>
+<!-- <icon name="refresh" size="m" /> -->
+
 			</div>
 
 			<div id="y-controller">
-				<div class="xy-controller">
-	<div class="controls">
-		<div class="control control--enable">enable</div>
-<!-- 		<div class="control control--reset">reset</div>
-		<div class="control control--load disabled">load</div>
-		<div class="control control--save disabled">save</div> -->
-	</div>
-	<svg xmlns="http://www.w3.org/2000/svg"></svg>
+				
+
+<div class="xy-controller">
+	<div class="xy-controller__controls">
+		<div class="control control--enable">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#edit"></use>
+	</svg>
 </div>
+
+</div>
+ 		<div class="control control--refresh">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#repeat"></use>
+	</svg>
+</div>
+
+</div>
+		<div class="control control--save">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#save"></use>
+	</svg>
+</div>
+
+</div> 
+ 		<div class="control control--load">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#download"></use>
+	</svg>
+</div>
+
+</div>
+	</div>
+	<div class="y-legend">
+		
+		
+
+		<div class="y-legend__point">
+				  100%
+			</div><div class="y-legend__point">
+				  50%
+			</div><div class="y-legend__point">
+				  0%
+			</div><div class="y-legend__point">
+				  -50%
+			</div><div class="y-legend__point">
+				  -100%
+			</div>
+
+	</div>
+	<svg xmlns="http://www.w3.org/2000/svg" class="xy-controller__area"></svg>
+	<div class="xy-controller__name">
+		y movement
+	</div>
+</div>
+<!-- <icon name="refresh" size="m" /> -->
+
 			</div>
 
 			<div id="rotation-controller">
-				<div class="xy-controller">
-	<div class="controls">
-		<div class="control control--enable">enable</div>
-<!-- 		<div class="control control--reset">reset</div>
-		<div class="control control--load disabled">load</div>
-		<div class="control control--save disabled">save</div> -->
-	</div>
-	<svg xmlns="http://www.w3.org/2000/svg"></svg>
+				
+
+<div class="xy-controller">
+	<div class="xy-controller__controls">
+		<div class="control control--enable">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#edit"></use>
+	</svg>
 </div>
+
+</div>
+ 		<div class="control control--refresh">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#repeat"></use>
+	</svg>
+</div>
+
+</div>
+		<div class="control control--save">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#save"></use>
+	</svg>
+</div>
+
+</div> 
+ 		<div class="control control--load">
+
+<div class="icon">
+	<svg viewBox="0 0 32 32" xml:space="preserve">
+		<use xlink:href="#download"></use>
+	</svg>
+</div>
+
+</div>
+	</div>
+	<div class="y-legend">
+		
+		
+
+		<div class="y-legend__point">
+				  -45°
+			</div><div class="y-legend__point">
+				  -22.5°
+			</div><div class="y-legend__point">
+				  0°
+			</div><div class="y-legend__point">
+				  22.5°
+			</div><div class="y-legend__point">
+				  45°
+			</div>
+
+	</div>
+	<svg xmlns="http://www.w3.org/2000/svg" class="xy-controller__area"></svg>
+	<div class="xy-controller__name">
+		rotation
+	</div>
+</div>
+<!-- <icon name="refresh" size="m" /> -->
+
 			</div>
 
 		</div>

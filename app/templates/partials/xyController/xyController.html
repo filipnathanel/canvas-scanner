@@ -1,9 +1,31 @@
+{% import "../../macros/icon.html" as icon %}
+
+{% macro controller(name, controllerRange, unit) %}
+
 <div class="xy-controller">
-	<div class="controls">
-		<div class="control control--enable">enable</div>
-<!-- 		<div class="control control--reset">reset</div>
-		<div class="control control--load disabled">load</div>
-		<div class="control control--save disabled">save</div> -->
+	<div class="xy-controller__controls">
+		<div class="control control--enable">{{ icon.icon('edit') }}</div>
+ 		<div class="control control--refresh">{{ icon.icon('repeat') }}</div>
+		<div class="control control--save">{{ icon.icon('save') }}</div> 
+ 		<div class="control control--load">{{ icon.icon('download') }}</div>
 	</div>
-	<svg xmlns="http://www.w3.org/2000/svg"></svg>
+	<div class="y-legend">
+		
+		{% set spread = (controllerRange[1] - controllerRange[0]) %}
+
+		{% for i in range(0, 5) -%}
+
+			<div class="y-legend__point">
+				  {{ controllerRange[0] + spread/4 * i }}{{unit}}
+			</div>
+
+		{%- endfor %}
+
+	</div>
+	<svg xmlns="http://www.w3.org/2000/svg" class="xy-controller__area"></svg>
+	<div class="xy-controller__name">
+		{{ name }}
+	</div>
 </div>
+<!-- <icon name="refresh" size="m" /> -->
+{% endmacro %}

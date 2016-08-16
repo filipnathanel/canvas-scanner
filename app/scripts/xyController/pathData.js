@@ -68,8 +68,7 @@ export default class PathData  {
 		var point = new Circle({
 			cx: this.relWToAbs(x),
 			cy: this.relHToAbs(y),
-			r: 6,
-			fill: 'red',
+			r: 4,
 		}, this.$svg);
 
 		point.x = x;
@@ -210,8 +209,6 @@ export default class PathData  {
 
 				var path = new Path({
 					'd':d,
-					'stroke':'blue',
-					'stroke-width':'1'
 				}, this.$svg, true);	
 
 				this.data.array[i].path = path;
@@ -300,7 +297,6 @@ export default class PathData  {
 						cx: slopeControlPos.x.toFixed(2),
 						cy: slopeControlPos.y.toFixed(2),
 						r: 4,
-						fill: 'blue',
 					}, this.$svg);
 
 					slopeControl.el.classList.add('slope-controller');
@@ -334,60 +330,61 @@ export default class PathData  {
 
 	onSlopeControlLeftClick(e, point){
 
-		var self = this,
-			selectedSlopeControl = event.target,
-			clickPos = SVGUtils.mousePos(e, this.$svg),
-			posDiff = { 
-				x: selectedSlopeControl.getAttribute('cx') - clickPos.x,
-				y: selectedSlopeControl.getAttribute('cy') - clickPos.y
-			},
-			mouseCache = clickPos.y + posDiff.y;
+			var self = this,
+				selectedSlopeControl = event.target,
+				clickPos = SVGUtils.mousePos(e, this.$svg),
+				posDiff = { 
+					x: selectedSlopeControl.getAttribute('cx') - clickPos.x,
+					y: selectedSlopeControl.getAttribute('cy') - clickPos.y
+				},
+				mouseCache = clickPos.y + posDiff.y;
 
-		function dragHandler(e) {
+			function dragHandler(e) {
 
-			var movePos = SVGUtils.mousePos(e, self.$svg),
-				xPos = movePos.x + posDiff.x,
-				yPos = movePos.y + posDiff.y;
+				var movePos = SVGUtils.mousePos(e, self.$svg),
+					xPos = movePos.x + posDiff.x,
+					yPos = movePos.y + posDiff.y;
 
-				var moveDiff = mouseCache - yPos;
-				if (moveDiff > 0){
-					increaseSlope(moveDiff);
-				}else if (moveDiff < 0){
-					decreaseSlope(moveDiff);
-				} else{
-					// do nothing
+					var moveDiff = mouseCache - yPos;
+					if (moveDiff > 0){
+						increaseSlope(moveDiff);
+					}else if (moveDiff < 0){
+						decreaseSlope(moveDiff);
+					} else{
+						// do nothing
+					}
+				mouseCache = yPos;
+
+				self.redrawPaths();
+
+			}
+
+			function onMouseUp(){
+				self.$svg.removeEventListener('mousemove', dragHandler);
+				document.removeEventListener('mouseup', onMouseUp);
+			}
+
+			function increaseSlope(diff){
+				if (point.slope + diff < -50){
+					point.slope = -50;
+				}else{
+					point.slope = point.slope - diff;
 				}
-			mouseCache = yPos;
-
-			self.redrawPaths();
-
-		}
-
-		function onMouseUp(){
-			self.$svg.removeEventListener('mousemove', dragHandler);
-			document.removeEventListener('mouseup', onMouseUp);
-		}
-
-		function increaseSlope(diff){
-			if (point.slope + diff < -50){
-				point.slope = -50;
-			}else{
-				point.slope = point.slope - diff;
 			}
-		}
-		
-		function decreaseSlope(diff){
-			if (point.slope + diff > 50){
-				point.slope = 50
-			}else{
-				point.slope = point.slope - diff;
+			
+			function decreaseSlope(diff){
+				if (point.slope + diff > 50){
+					point.slope = 50
+				}else{
+					point.slope = point.slope - diff;
+				}
 			}
-		}
 
-		// attach drag handler
-		this.$svg.addEventListener('mousemove', dragHandler);
-		// listen for the drag end
-		document.addEventListener('mouseup', onMouseUp);
+			// attach drag handler
+			this.$svg.addEventListener('mousemove', dragHandler);
+			// listen for the drag end
+			document.addEventListener('mouseup', onMouseUp);
+
 	}
 
 
@@ -399,6 +396,7 @@ export default class PathData  {
 	redrawPoints(){
 
 		this.data.array.forEach( (point) => {
+
 			point.setOption('cx', this.relWToAbs(point.x));
 			point.setOption('cy', this.relHToAbs(point.y))
 		});

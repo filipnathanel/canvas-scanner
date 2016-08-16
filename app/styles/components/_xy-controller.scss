@@ -3,35 +3,134 @@
 }
 
 .xy-controller{
+
+	@extend .f-size-small;
+
 	float:left;
 	background-color: $white;
 	border: #777;
 	width:100%;
-	border-left:1px solid $black;
-	border-right:1px solid $black;
-	border-bottom:1px solid $black;
+	position: relative;
 
-	&.active{
+	// border-left:1px solid $border-color;
+	border-right:1px solid $border-color;
+	border-bottom:1px solid $border-color;
+	
+	&--active{
+		height:150px;
+
+		.automation-point{
+			stroke:red;
+		}
+
+		.slope-controller{
+			fill: blue;
+		}
+
+		path{
+			stroke:red;
+		}
+
+		.y-legend{
+			&__point{
+				opacity:1;
+			}
+		}
+
+		.control{
+			display:block;
+			&--enable{
+				display:none;
+			}
+		}
+
+	}
+
+	&--disabled{
+		height:50px;
+
+		.xy-controller__area{
+			pointer-events:none;
+		}
+		.automation-point, .slope-controller{
+			stroke:$light-gray;
+		}
+		path{
+			stroke:$light-gray;
+		}
+
+		.y-legend{
+			&__point{
+				visibility:hidden;
+			}
+		}
+
+		.control{
+			display:none;
+			&--enable{
+				display:block;
+			}
+		}
 		
 	}
 
-	&.disabled{
-		svg{
-			height:50px
+	&:hover{
+		.xy-controller__name{
+			opacity:0.15;
 		}
 	}
 
-	svg{
+	.xy-controller__area{
 		display:block;
-		width:calc(100% - 50px);
+		width:calc(100% - 85px);
 		height:100%;
-		border-left:1px solid $black;
 	}
-	circle{
-		border:1px solid white;
+
+	circle{}
+
+	path{
+		stroke-width:1px;
 	}
+
+
+	&__controls{
+		float:left;
+		width:50px;
+		height:100%;
+		border-right:1px solid $border-color;
+
+		.control{
+			cursor:pointer;
+			height:50px;
+			width:100%;
+			// padding:1em;
+			border-bottom:1px solid $border-color;
+			&:hover{
+				background: darken($white, 10%);
+			}
+		}
+		.icon{
+			padding:10px;
+			// width:100%;
+			// height:100%;
+			svg{
+				max-height:30px;
+			}
+		}
+	}
+
+	&__name{
+		position: absolute;
+		top:0.2em;
+		right:0.2em;
+		z-index: 1;
+		pointer-events:none;
+	}
+
 }
 	.automation-point{
+		fill:$white;
+		stroke-width:2px;
 		cursor: move;
 	}
 
@@ -39,12 +138,43 @@
 		cursor: n-resize;
 	}
 
-	.controls{
-		float:left;
-		width:50px;
-		height:50px;
-	}
 
 	.control{
 
 	}
+
+	.y-legend{
+		width:35px;
+		float:left;
+		height:100%;
+		border-right:1px solid $border-color;
+		border-left: 1px solid $border-color;
+		position: relative;
+		&__point{
+			position: absolute;
+			opacity:0;
+			transition: opacity 0.5s;
+			transition-delay:0.1s;
+			font-size:0.85em;
+			// transform:translateY(-50%);
+			line-height:0;
+			right:0;
+			&:nth-of-type(1){
+				top:5%;
+				transform:none;
+			}
+			&:nth-of-type(2){
+				top:25%;
+			}
+			&:nth-of-type(3){
+				top:50%;
+			}
+			&:nth-of-type(4){
+				top:75%;
+			}
+			&:nth-of-type(5){
+				top:95%;
+			}
+		}
+	}
+

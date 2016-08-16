@@ -1,7 +1,8 @@
 .scanner{
 }
 	.scan-displays{
-		border:1px solid $black;
+		// border:1px solid $black;
+		border-bottom:1px solid $border-color;
 		position: relative;
 
 		canvas{
@@ -10,14 +11,14 @@
 		}
 	}
 	.scan-area{
-		border-right: 1px solid #777;
+		border-right: 1px solid $border-color;
 		width:50%;
 		float:left;
 	}
 		.scan-indicator{
 			position: absolute;
-			top:0
-;			height:100%;
+			top:0;
+			height:100%;
 			width:2px;
 			background-color:yellow;
 			left:0;

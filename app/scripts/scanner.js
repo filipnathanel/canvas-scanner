@@ -63,6 +63,8 @@ export default class Scanner {
 
 			this.loadFile(file).then( (image) => {
 
+				this.image = image;
+
 				this.rescaleScanAreas(image);
 
 				this.scanArea.drawImage(image);
@@ -121,12 +123,64 @@ export default class Scanner {
 	// scan trigger
 	onScanClick(e){
 		if( this.scanArea.imageLoaded === true && this.scanning === false ){
-			this.scan();
+			this.alternativeScan();
+			// this.scan();
 		}else{
 			console.log('no image present in the scanner');
 		}
 
 	}
+
+	alternativeScan(){
+		
+		var stepsDone = 0,
+			maxSteps = 200;
+
+		var frameRequested = false;
+
+		function preview(){
+
+			if (frameRequested === false){
+
+				frameRequested = true;
+
+				window.requestAnimationFrame(drawResult);
+			}
+
+		}
+
+		function drawResult(){
+
+			// this.scanResult.context.putImageData();
+			console.log('framedrawn');
+
+			frameRequested = false;
+
+		}
+
+		while( stepsDone < this.scanArea.canvas.width && stepsDone < maxSteps){
+
+			setTimeout(()=>{
+
+				var progress = stepsDone / this.image.width;
+
+				var change = this.automation.getValueAtPercent(progress);
+				this.scanArea.moveImage(change.x, change.y, change.rotation);
+				
+				var scannedLine = this.scanArea.context.getImageData( stepsDone, 0, 1, this.scanArea.canvas.height );
+
+				console.log(scannedLine);
+				preview();
+				// this.scanResult.context.putImageData( scannedLine, stepsDone, 0, 0, 0, 1, scannedLine.height );
+				
+				
+			},0)
+
+			stepsDone++;
+			
+		}
+
+	}	
 
 	scan(){
 
@@ -135,7 +189,7 @@ export default class Scanner {
 		var self = this;
 
 		var start = null;
-		var duration = 1000;
+		var duration = 12000;
 
 		var currentStep = 0;
 		var newStep = 0;
