@@ -16,7 +16,7 @@ $timeline-height: 35px;
 			width:85px;
 			line-height:35px;
 			text-align:center;
-			border-right: 1px solid $black;
+			border-right: 1px solid $border-color;
 		}
 
 		&__timeline{
@@ -29,7 +29,7 @@ $timeline-height: 35px;
 	.timeline__indicator{
 		width: 1px;
 		height: $timeline-height - 25;
-		background-color:$black;
+		background-color:$border-color;
 		position: absolute;
 		margin-left: -0.5px;
 		bottom: -$timeline-height;
@@ -45,6 +45,7 @@ $timeline-height: 35px;
 					width:1em;
 					height:1em;
 					display:block;
+					color:$border-color;
 				}
 			}
 		}

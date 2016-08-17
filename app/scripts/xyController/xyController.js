@@ -89,7 +89,7 @@ export default class XYController{
 	getValueAtPercent( percent ){
 
 		// simply calculate the x coordinate at which we will be looking for automation value
-		var percent = percent < 1 ? percent * 100 : 100;
+		var percent = percent < 1 ? Math.round( percent * 10000 ) / 100 : 100;
 
 		// get the path corresponding for the given svgX value
 		var currentPath = this.pathData.getPathAtPercent(percent),

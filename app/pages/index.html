@@ -5,9 +5,74 @@
 {% block content %}
 
 	<aside class="sidebar d-1of3 cf">
-	    <header class="site-header m-all t-all d-all">
-	        <h1 class="h1 site-title">Glitch Scanner</h1>
-	    </header>
+
+		<div class="sidebar__container">
+			
+		    <header class="header site-header m-all t-all d-all">
+		        <h1 class="h1 site-title">Glitch Scanner</h1>
+		        <p class="p">technical preview</p>
+		    </header>
+
+		    <div class="g-all tutorial">
+		    	<h2 class="h2">A quick tutorial:</h2>
+		    	
+		    	<ul class="tutorial__list">
+		    		<li>Select an image with [ Choose a file ] button</li>
+		    		<li>Add automation points ( right click on automation controller )</li>
+		    		<li>Start Scan</li>
+		    		<li>After the scan is finished you can save the generated File</li>
+		    	</ul>
+
+		    	<p></p>
+		    </div>
+
+		    <div class="g-all notes">
+		    	<h2 class="h2">Notes:</h2>
+		    	
+		    	<ul class="notes__list">
+			   		<li>Supported Browsers:
+		    			<ul>
+		    				<li>Chrome</li>
+		    			</ul>
+		    		</li>
+		    		<li>Files:
+		    			<ul>
+		    				<li>Supported files: png/jpg/svg</li>
+		    			</ul>
+		    		</li>
+					<li>
+						Automation:
+						<ul>
+							<li>Right click on Automation Point to remove it</li>
+						</ul>
+					</li>
+		    	</ul>
+
+		    	<p></p>
+		    </div>
+
+		    <div class="g-all roadmap">
+		    	<h2 class="h2">Further Developements:</h2>
+		    	<ul class="roadmap__list">
+		    		<li>add context menu to automation points
+		    			<ul>
+		    				<li>delete</li>
+		    				<li>path type select (linear/quadratic/bezier/sine)</li>
+		    			</ul>
+		    		</li>
+		    		<li>Add Examples/Presets</li>
+		    		<li>Replace Canvas getImageData with low Level pixels manipulation</li>
+		    	</ul>
+		    </div>
+
+		    <footer class="footer site-footer">
+		    	<div class="footer__links">
+		    		<div class="footer__link">
+		    			<a href="https://github.com/filipnathanel/canvas-scanner">Github</a>
+		    		</div>
+		    	</div>
+		    </footer>
+		</div>
 		<!-- <div class="sidebar__item">Load Automation Presets</div> -->
 	</aside>
 

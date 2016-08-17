@@ -1,9 +1,21 @@
 .main{
-	
+	box-shadow :-2px 2px 8px rgba(120,120,120,0.1);
+	min-height: 100vh;
+	position: fixed;
+	top:0;
+	right:0;
 }
 
 .sidebar{
+	
+	padding: 1rem 0 1rem 1rem;
 	min-height:100vh;
-	background-color: $light-gray;
-
+	background-color: $green;
+	
+	&__container{
+		color:$text-color;
+		min-height: calc(100vh - 2rem);
+		padding: 1rem;
+		background-color:$white;
+	}
 }

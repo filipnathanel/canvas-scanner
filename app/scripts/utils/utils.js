@@ -178,3 +178,24 @@ export class SortedArray {
     }
 
 }
+
+/**
+ * source: http://www.2ality.com/2015/10/concatenating-typed-arrays.html
+ * copies an existing array into another  
+ * @param  {[type]}    resultConstructor [description]
+ * @param  {...[type]} arrays            [description]
+ * @return {[type]}                      [description]
+ */
+export function concatenate(resultConstructor, ...arrays) {
+    let totalLength = 0;
+    for (let arr of arrays) {
+        totalLength += arr.length;
+    }
+    let result = new resultConstructor(totalLength);
+    let offset = 0;
+    for (let arr of arrays) {
+        result.set(arr, offset);
+        offset += arr.length;
+    }
+    return result;
+}

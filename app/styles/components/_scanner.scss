@@ -1,4 +1,16 @@
 .scanner{
+	
+	&--active{
+		.scan-indicator{
+			display:block;
+		}
+	}
+
+	.button{
+		// background-color:$border-color;
+		// color:white;
+	}
+
 }
 	.scan-displays{
 		// border:1px solid $black;
@@ -20,16 +32,20 @@
 			top:0;
 			height:100%;
 			width:2px;
-			background-color:yellow;
+			background-color:$yellow;
 			left:0;
-			border-right: 1px solid blue;
+			border-right: 1px solid $blue;
+			z-index: 0;
+			display:none;
 		}
 	.scan-result{
-		// position: absolute;
+		position: relative;
+		z-index: 2;
 		float:right;
 		width:50%;
 		bottom:0;
 		right:0;
 		background-color: #fff;
 		// border:1px solid #777;
+		
 	}

@@ -27,7 +27,7 @@ export default class ScanResult extends Canvas {
 	initEvents(){
 
 		Globals.onResize.add(() => { 
-			console.log('scanResult onResize trigerred');
+			// console.log('scanResult onResize trigerred');
 			// this.canvas.width = Globals.viewport.width;
 		});
 
@@ -44,8 +44,13 @@ export default class ScanResult extends Canvas {
 	}
 
 	download(el, image){
-		el.href = image;
+
+		var blob = this.dataUrlToBlob(image),
+			objUrl = URL.createObjectURL(blob);
+
 		el.download = 'scanned';
+		
+		el.href = objUrl;
 	}
 
 	// as per https://gist.github.com/remy/784508
@@ -114,6 +119,19 @@ export default class ScanResult extends Canvas {
 
 		});
 
+
+	}
+
+	dataUrlToBlob(dataUrl){
+	    
+	    var arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+	        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+	    
+	    while(n--){
+		        u8arr[n] = bstr.charCodeAt(n);
+	    }
+
+	    return new Blob([u8arr], {type:mime});
 
 	}
 

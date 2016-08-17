@@ -86,9 +86,12 @@ export default class Scanner {
 
 				var rawImage = e.target.result;
 				var image = new Image();
-				image.src = rawImage;
 
-				resolve(image);
+				image.addEventListener('load',() =>{
+					resolve(image);
+				})
+
+				image.src = rawImage;
 
 			});
 
@@ -123,61 +126,122 @@ export default class Scanner {
 	// scan trigger
 	onScanClick(e){
 		if( this.scanArea.imageLoaded === true && this.scanning === false ){
-			this.alternativeScan();
-			// this.scan();
+			// this.wtfScan();
+			this.scan();
 		}else{
 			console.log('no image present in the scanner');
 		}
 
 	}
 
+	wtfScan(){
+
+		var start = performance.now();
+		var mainScan = this.scanArea.context.getImageData( 0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height ) ;
+		var pixels = mainScan.data;
+
+		var xMax = mainScan.width;
+		var yMax = mainScan.height;
+		var lenn = pixels.length;
+
+		// console.log(pixels);
+
+		var transformedPixels = [];
+
+		// loop enough times to represent whole image
+		for( var i = 0; i < xMax ; i++){
+
+			// rownanie ogólne funkcji
+			//  f(x) = ax + b
+			// var xChange = xVal ? (this.canvas.width - this.image.width ) * xVal : (this.canvas.width - this.image.width) / 2 ,
+			var progress = i / xMax ;
+
+			// zlupuj row
+			// for (var j = 0; j < lenn; j+= yMax){
+			// 	// transformedPixels.push(pixels[j+i]);
+			// 	transformedPixels[transformedPixels.length] = (pixels[j+i]);
+			// }
+
+			// console.log(progress)
+			var change = this.automation.getValueAtPercent(progress);
+
+			// var wartoscX = i * change.x;
+
+			var angle = Math.round((-45 + 90 * change.rotation) * 100) / 100 ;
+			// console.log('angle: ' + angle)
+			var wspolczynnik = Math.tan(angle);
+
+			console.log(wspolczynnik);
+
+
+			// var rezultat = wspolczynnik * wartoscX;
+
+		}
+		// console.log(transformedPixels);
+
+		var end = performance.now();
+		var duration = end - start;
+		console.log(duration)
+
+	}
+
+
 	alternativeScan(){
+
+		var self = this;
 		
 		var stepsDone = 0,
-			maxSteps = 200;
+			maxSteps = 2000;
 
 		var frameRequested = false;
+		var scannedBuffer = []
 
-		function preview(){
+		function preview(step, scanned){
 
 			if (frameRequested === false){
 
 				frameRequested = true;
 
-				window.requestAnimationFrame(drawResult);
+				window.requestAnimationFrame(() => {
+					drawResult(step);
+				});
+
+			} else {
+				scannedBuffer.push(scanned);
+				// scannedBuffer = utils.concatenate(Uint8Array, scannedBuffer, scanned.data);
 			}
 
 		}
 
-		function drawResult(){
-
-			// this.scanResult.context.putImageData();
-			console.log('framedrawn');
-
+		function drawResult(step){
+			// console.log(scannedBuffer);
+			// self.scanResult.context.putImageData();
+			// console.log(step);
 			frameRequested = false;
-
+		 // scanned, currentStep, 0, 0, 0, scanned.width, scanned.height 
 		}
 
-		while( stepsDone < this.scanArea.canvas.width && stepsDone < maxSteps){
+		while( stepsDone <= this.scanArea.canvas.width && stepsDone < maxSteps){
 
-			setTimeout(()=>{
+			let step = stepsDone;
 
-				var progress = stepsDone / this.image.width;
+			setTimeout( () => {
+ 
+				var progress = step / this.scanArea.canvas.width;
 
 				var change = this.automation.getValueAtPercent(progress);
+
 				this.scanArea.moveImage(change.x, change.y, change.rotation);
 				
-				var scannedLine = this.scanArea.context.getImageData( stepsDone, 0, 1, this.scanArea.canvas.height );
-
-				console.log(scannedLine);
-				preview();
+				var scanned = this.scanArea.context.getImageData( stepsDone, 0, 1, this.scanArea.canvas.height ) ;
+				// console.log(scannedLine);
+				preview(step, scanned);
 				// this.scanResult.context.putImageData( scannedLine, stepsDone, 0, 0, 0, 1, scannedLine.height );
 				
-				
-			},0)
+			}, 0)
 
 			stepsDone++;
-			
+
 		}
 
 	}	
@@ -185,45 +249,46 @@ export default class Scanner {
 	scan(){
 
 		this.scanning = true;
+		this.$scanner.classList.add('scanner--active');
 
 		var self = this;
-
 		var start = null;
-		var duration = 12000;
+		var scansPerFrame = 3;
+
+		// 16.667 is roughly the framelength
+		var duration = (self.scanArea.canvas.width * 17) / scansPerFrame;
+		var progress = 0;
 
 		var currentStep = 0;
 		var newStep = 0;
 
 		function scanLoop(timestamp){
+			
+			for (var i = 0; i < scansPerFrame; i++) {
 
-			if (!start) start = timestamp;
-			var progress = ((timestamp - start) / duration);
+				progress = currentStep / self.scanArea.canvas.width;
 
-			// calculate the next step
-			newStep = progress * self.scanArea.canvas.width;
+				if (currentStep > 0){
+					var scanned = self.scanArea.context.getImageData(currentStep, 0, 1, self.scanArea.canvas.height );
+					self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+				}
 
-			// the length of the scan step;
-			var stepsDiff = newStep - currentStep;
+				var change = self.automation.getValueAtPercent(progress);
+				self.scanArea.moveImage(change.x, change.y, change.rotation);
 
-			if (currentStep > 0){
-				var scanned = self.scanArea.context.getImageData(currentStep, 0, stepsDiff, self.scanArea.canvas.height );
-				self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+				currentStep++;
 			}
 
-			// move the image
-			var change = self.automation.getValueAtPercent(progress);
-
-			self.scanArea.moveImage(change.x, change.y, change.rotation);
 
 			// need to experiment with transform translate px val to see wheter it's better performant
 			self.indicator.style.left = (progress * 50).toFixed(2) + '%';
 			// increment the step
-			currentStep = newStep;
 
-			if ( progress < 1 ){
+			if ( progress <= 1 ){
 				window.requestAnimationFrame(scanLoop);
 			}else{
 				self.scanning = false;
+				self.$scanner.classList.remove('scanner--active');
 			}
 
 		}
@@ -238,6 +303,9 @@ export default class Scanner {
 	}
 
 	setDPI( dpi ){
+
+		this.DPI = dpi;
+
 		this.scanArea.setDPI( dpi );
 		this.scanResult.setDPI( dpi );
 	}

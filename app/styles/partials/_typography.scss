@@ -6,7 +6,7 @@ Stylesheet: Typography
 ******************************************************************/
 
 // font stacks
-$sans-serif:    "Helvetica Neue", Helvetica, Arial, sans-serif;
+$sans-serif:    "Inconsolata", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $serif:         "Georgia", Cambria, Times New Roman, Times, serif;
 
 /*
@@ -38,8 +38,8 @@ p {
 ////////////////////
 
 $singularity-mobile  : pxToRem(30); // h1,
-$huge-mobile         : pxToRem(24); // h2
-$big-mobile          : pxToRem(20); // button
+$huge-mobile         : pxToRem(21); // h2
+$big-mobile          : pxToRem(18); // button
 $medium-mobile       : pxToRem(18); //
 $normy-mobile        : pxToRem(17); // h4
 $normal-mobile       : pxToRem(12); // body, header description
@@ -50,7 +50,7 @@ $small-mobile        : pxToRem(10);
 ////////////////////
 
 $singularity-tablet  : pxToRem(32);
-$huge-tablet         : pxToRem(28);
+$huge-tablet         : pxToRem(22);
 $big-tablet          : pxToRem(20);
 $medium-tablet       : pxToRem(19);
 $normy-tablet        : pxToRem(18);
@@ -62,7 +62,7 @@ $small-tablet        : pxToRem(11);
 //////////////////////
 
 $singularity-desktop : pxToRem(38);
-$huge-desktop        : pxToRem(32);
+$huge-desktop        : pxToRem(28);
 $big-desktop         : pxToRem(22);
 $medium-desktop      : pxToRem(22);
 $normy-desktop       : pxToRem(20);
@@ -74,7 +74,7 @@ $small-desktop       : pxToRem(11);
 ///////////////////
 
 $singularity-wide    : pxToRem(40);
-$huge-wide           : pxToRem(34);
+$huge-wide           : pxToRem(30);
 $big-wide            : pxToRem(24);
 $medium-wide         : pxToRem(22);
 $normy-wide          : pxToRem(20);

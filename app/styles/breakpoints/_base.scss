@@ -1,3 +1,7 @@
+html,body{
+	font-size:100%;
+}
+
 body {
 	background: $white;
 	font-family: $sans-serif;
@@ -11,9 +15,14 @@ body {
 	padding: 0.2em 0;
 }
 
-.site-header{}
+.site-header{
+	p{
+		margin-top:0.2em;
+	}
+}
 	.site-title{
-		padding-left:0.5em;
+		// padding-left:0.5em;
+		margin:0.33em 0 0 0;
 	}
 
 .sidebar{

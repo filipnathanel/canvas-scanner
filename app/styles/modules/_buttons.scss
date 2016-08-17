@@ -33,7 +33,7 @@ to load up the defaults in all our buttons.
   &:hover, &:focus {
     // @extend %box-shadow-0;
     // background-color: darken($link-color, 10%);
-    background-color: darken($white, 10%);
+    background-color: $yellow;
     // color:white;
 
   } // end hover
