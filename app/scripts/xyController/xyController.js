@@ -32,8 +32,14 @@ export default class XYController{
 
 	}
 
-	get svgWidth(){ return this.$svg.width.baseVal.value ;}
-	get svgHeight(){ return this.$svg.height.baseVal.value ;}
+	get svgWidth(){ 
+		var box = this.$svg.getBoundingClientRect();
+		return box.right-box.left;
+	}
+	get svgHeight(){ 
+		var box = this.$svg.getBoundingClientRect();
+		return box.bottom-box.top;
+	}
 
 	init(options){
 

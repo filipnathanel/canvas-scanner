@@ -30,8 +30,14 @@ export default class PathData  {
 
 	}
 
-	get svgWidth(){ return this.$svg.width.baseVal.value ;}
-	get svgHeight(){ return this.$svg.height.baseVal.value ;}
+	get svgWidth(){ 
+		var box = this.$svg.getBoundingClientRect();
+		return box.right-box.left;
+	}
+	get svgHeight(){ 
+		var box = this.$svg.getBoundingClientRect();
+		return box.bottom-box.top;
+	}
 
 	initEvents(){
 		this.$svg.addEventListener('contextmenu', (e) => { this.onAreaRightClick(e); });
@@ -120,7 +126,7 @@ export default class PathData  {
 	onPointLeftClick(e, point){
 
 		var self = this,
-			selectedPoint = event.target,
+			selectedPoint = e.target,
 			clickPos = SVGUtils.mousePos(e, this.$svg),
 			posDiff = { 
 				x: selectedPoint.getAttribute('cx') - clickPos.x,
@@ -331,7 +337,7 @@ export default class PathData  {
 	onSlopeControlLeftClick(e, point){
 
 			var self = this,
-				selectedSlopeControl = event.target,
+				selectedSlopeControl = e.target,
 				clickPos = SVGUtils.mousePos(e, this.$svg),
 				posDiff = { 
 					x: selectedSlopeControl.getAttribute('cx') - clickPos.x,

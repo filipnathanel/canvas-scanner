@@ -9,35 +9,28 @@ export default class ScanResult extends Canvas {
 
 		super(scanResult, context);
 
-		// this.context = context;
-
 		this.init();
 		this.initEvents();
 	}
 
 	init(){
-
 		this.setDPI();
 		this.downloadButton = utils.getEl('#download-image', this.context)
-		console.log(this.downloadButton);
-		// this.canvas.width = Globals.viewport.width;
-		// this.canvas.height = Globals.viewport.height / 2 ;
 	}
 
 	initEvents(){
 
 		Globals.onResize.add(() => { 
 			// console.log('scanResult onResize trigerred');
-			// this.canvas.width = Globals.viewport.width;
 		});
 
 		this.downloadButton.addEventListener('click', (e)  =>{
-			
-			this.trimResult().then( (image) => {
 
-				this.download(e.target, image);
+			var image = this.trimResult();
+
+			this.download(e.target, image);
 			
-			});
+			
 
 		});
 
@@ -49,8 +42,8 @@ export default class ScanResult extends Canvas {
 			objUrl = URL.createObjectURL(blob);
 
 		el.download = 'scanned';
-		
 		el.href = objUrl;
+
 	}
 
 	// as per https://gist.github.com/remy/784508
@@ -69,56 +62,47 @@ export default class ScanResult extends Canvas {
 			bottom:null
 		}
 
-		return new Promise((resolve, reject) => {
+		for ( i = 0; i < dataLen; i+=4) {
+			if (imgData.data[i+3] !== 0) {
+		      x = (i / 4) % this.canvas.width;
+		      y = ~~((i / 4) / this.canvas.width);
+		  
+		      if (bounds.top === null) {
+		        bounds.top = y;
+		      }
+		      
+		      if (bounds.left === null) {
+		        bounds.left = x; 
+		      } else if (x < bounds.left) {
+		        bounds.left = x;
+		      }
+		      
+		      if (bounds.right === null) {
+		        bounds.right = x; 
+		      } else if (bounds.right < x) {
+		        bounds.right = x;
+		      }
+		      
+		      if (bounds.bottom === null) {
+		        bounds.bottom = y;
+		      } else if (bounds.bottom < y) {
+		        bounds.bottom = y;
+		      }
+		    }
+		}
 
-			for ( i = 0; i < dataLen; i+=4) {
-				if (imgData.data[i+3] !== 0) {
-			      x = (i / 4) % this.canvas.width;
-			      y = ~~((i / 4) / this.canvas.width);
-			  
-			      if (bounds.top === null) {
-			        bounds.top = y;
-			      }
-			      
-			      if (bounds.left === null) {
-			        bounds.left = x; 
-			      } else if (x < bounds.left) {
-			        bounds.left = x;
-			      }
-			      
-			      if (bounds.right === null) {
-			        bounds.right = x; 
-			      } else if (bounds.right < x) {
-			        bounds.right = x;
-			      }
-			      
-			      if (bounds.bottom === null) {
-			        bounds.bottom = y;
-			      } else if (bounds.bottom < y) {
-			        bounds.bottom = y;
-			      }
-			    }
-			}
+		var trimHeight = bounds.bottom - bounds.top,
+			trimWidth = bounds.right - bounds.left,
+			trimmed = this.context.getImageData(bounds.left, bounds.top, trimWidth, trimHeight);
 
-			var trimHeight = bounds.bottom - bounds.top,
-				trimWidth = bounds.right - bounds.left,
-				trimmed = this.context.getImageData(bounds.left, bounds.top, trimWidth, trimHeight);
+		var tempCanvas = document.createElement('canvas'),
+			tempContext = tempCanvas.getContext('2d');
 
-			var tempCanvas = document.createElement('canvas'),
-				tempContext = tempCanvas.getContext('2d');
+		tempCanvas.width = trimWidth;
+		tempCanvas.height = trimHeight;
+		tempContext.putImageData(trimmed, 0, 0);
 
-			tempCanvas.width = trimWidth;
-			tempCanvas.height = trimHeight;
-			tempContext.putImageData(trimmed, 0, 0);
-
-			/**
-			 * Need to make it a blob
-			 * so we can process bigger files
-			 */
-			resolve(tempCanvas.toDataURL());
-
-		});
-
+		return tempCanvas.toDataURL();
 
 	}
 
