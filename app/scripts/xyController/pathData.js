@@ -125,6 +125,8 @@ export default class PathData  {
 	 */
 	onPointLeftClick(e, point){
 
+		e.preventDefault();
+
 		var self = this,
 			selectedPoint = e.target,
 			clickPos = SVGUtils.mousePos(e, this.$svg),
@@ -141,14 +143,28 @@ export default class PathData  {
 
 			var movePos = SVGUtils.mousePos(e, self.$svg),
 				xPos = movePos.x + posDiff.x,
-				yPos = movePos.y + posDiff.y;
+				yPos = movePos.y + posDiff.y;	
+
+			// guard the xPos
+			if (xPos < 0){
+				xPos = 0;
+			} else if (xPos > self.svgWidth){
+				xPos = self.svgWidth;
+			}
+			
+			// guard the yPos
+			if (yPos < 0){
+				yPos = 0;
+			} else if (yPos > self.svgHeight){
+				yPos = self.svgHeight;
+			}
 
 			// don't change the xPos for automation start and end
 			if ( pointLocation != 0 && pointLocation < self.data.array.length){
-				point.setOption('cx', xPos);
+				point.setAttribute('cx', xPos);
 				point.x = self.absWToRel(xPos);
 			}
-			point.setOption('cy', yPos);
+			point.setAttribute('cy', yPos);
 			point.y = self.absHToRel(yPos);
 
 			var newPoint = point;
@@ -160,12 +176,12 @@ export default class PathData  {
 		}
 
 		function onMouseUp(){
-			self.$svg.removeEventListener('mousemove', dragHandler);
+			document.removeEventListener('mousemove', dragHandler);
 			document.removeEventListener('mouseup', onMouseUp);
 		}
 
 		// attach drag handler
-		this.$svg.addEventListener('mousemove', dragHandler);
+		document.addEventListener('mousemove', dragHandler);
 		// listen for the drag end
 		document.addEventListener('mouseup', onMouseUp);
 	}
@@ -236,6 +252,12 @@ export default class PathData  {
 
 	}
 
+	/**
+	 * creates a svg path between points
+	 * @param  {point} pathFrom  a point the Path will be starting from
+	 * @param  {point} pathTo   a point the Path will finish at
+	 * @return {string}          a string value for the SVG path d attribute
+	 */
 	createPath(pathFrom, pathTo){
 
 		var type = pathFrom.type,
@@ -292,13 +314,13 @@ export default class PathData  {
 
 		if (len > 1){
 
-			for (let i = 0; i < loopTo; i++) {
+			for (let iteration = 0; iteration < loopTo; iteration++) {
 
-				if (this.data.array[i].type === 'quadratic'){
+				if (this.data.array[iteration].type === 'quadratic'){
 
-					var path = this.data.array[i].path;
+					var currentPath = this.data.array[iteration].path;
 
-					var slopeControlPos = path.el.getPointAtLength( path.el.getTotalLength() / 2 );
+					var slopeControlPos = currentPath.el.getPointAtLength( currentPath.el.getTotalLength() / 2 );
 					var slopeControl = new Circle({
 						cx: slopeControlPos.x.toFixed(2),
 						cy: slopeControlPos.y.toFixed(2),
@@ -307,16 +329,16 @@ export default class PathData  {
 
 					slopeControl.el.classList.add('slope-controller');
 					slopeControl.el.addEventListener('mousedown', (e)=>{
-						this.onSlopeControlLeftClick(e, this.data.array[i] );
+						this.onSlopeControlLeftClick(e, this.data.array[iteration] );
 					});
 					slopeControl.el.addEventListener('contextmenu', (e)=>{
 						e.preventDefault();
 						e.stopPropagation();
-						this.data.array[i].slope = 0;
+						this.data.array[iteration].slope = 0;
 						this.redrawPaths();
 					});
 
-					this.data.array[i].slopeControl = slopeControl;
+					this.data.array[iteration].slopeControl = slopeControl;
 
 				}
 			}
@@ -403,8 +425,8 @@ export default class PathData  {
 
 		this.data.array.forEach( (point) => {
 
-			point.setOption('cx', this.relWToAbs(point.x));
-			point.setOption('cy', this.relHToAbs(point.y))
+			point.setAttribute('cx', this.relWToAbs(point.x));
+			point.setAttribute('cy', this.relHToAbs(point.y))
 		});
 	}
 

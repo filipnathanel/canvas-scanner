@@ -7,6 +7,10 @@ export default class Path extends SVGElement {
 		super();
 
 		this.defaults = {
+			name:'path'
+		}
+
+		this.attributes = {
 			'stroke': '#000',
 			'stroke-width': 1,
 			'fill': 'none'

@@ -29,8 +29,6 @@ export default class ScanResult extends Canvas {
 			var image = this.trimResult();
 
 			this.download(e.target, image);
-			
-			
 
 		});
 
@@ -41,7 +39,7 @@ export default class ScanResult extends Canvas {
 		var blob = this.dataUrlToBlob(image),
 			objUrl = URL.createObjectURL(blob);
 
-		el.download = 'scanned';
+		el.download = 'glitch_scanned.png';
 		el.href = objUrl;
 
 	}

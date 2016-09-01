@@ -99,6 +99,23 @@ export function getEl(el, context = document){
     }
 }
 
+/**
+ * A shorthand function to get elements whether a single dom element is passed or a string is passed
+ * @param  {string} el
+ * @param  {DOMElement under which we will look for elements} context 
+ * @return {DOMElement} Iterable elements returned by our query
+ */
+export function getEls(el, context = document){
+
+    if (typeof el === 'string'){
+        if(el.indexOf('.') == 0){
+            return context.getElementsByClassName(el.substr(1));
+        }else{
+            return context.querySelectorAll(el);
+        }
+    } 
+}
+
 
 /**
  * returns random integer from the range

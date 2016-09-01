@@ -50,8 +50,6 @@ export default class Scanner {
 		Globals.onResize.add( () => { this.scanArea.redraw() } );
 	}
 
-	// onResize(){}
-
 	onImageUpdated(e){
 
 		var file = e.detail.file;

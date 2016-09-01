@@ -1,0 +1,135 @@
+body.popup-opened{
+	// overflow:hidden;
+	position: relative;
+	.menu-info{
+		color:white;
+	}
+}
+
+$trans-time: 0.4s;
+$overlay-background: rgba(0,0,0,0.1);
+$container-background: $white;
+
+
+
+/**
+ * Popup Styles
+ */
+.popup-overlay{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity $trans-time, visibility $trans-time;
+	pointer-events:none;
+	z-index: -1;
+	background-color: $overlay-background;
+
+	&.open{
+		opacity: 1;
+		visibility: visible;
+		pointer-events:auto;
+		z-index:$z-index-4;
+
+		.popup-container{
+			top: 50%;
+		}
+	}
+
+	&.on-popup-open{
+
+		.popup-container{
+			// top:0;
+		}
+
+	}
+
+	&.close{
+		z-index: 1000;
+
+		.popup-container{
+			top:0;
+		}
+	}
+}
+	.popup-close{
+		width: 30px;
+		height: 30px;
+		position: absolute;
+		right: 1px;
+		top: 1px;
+		overflow: hidden;
+		border: none;
+		// background: url("../images/popup-close.png") no-repeat center center;
+		text-indent: 200%;
+		color: transparent;
+		outline: none;
+		z-index: 1001;
+		cursor: pointer;
+		fill:$border-color;
+	}
+
+.nav-toggle{
+	position: absolute;
+	right: 0;
+	width:22px;
+	height:22px;
+	top:50%;
+	margin-top:-11px;
+	cursor:pointer;
+}
+#nav-close{
+	// display:none;
+}
+.popup-close{
+
+}
+
+.popup-container{
+	width:100%;
+	max-width: 500px;
+	background-color:$container-background;
+	position: absolute;
+	top: 0;
+	left:50%;
+	transform:translateY(-50%) translateX(-50%);
+	transition: top $trans-time;
+}
+
+/**
+ * MEDIA QUERIES
+ */
+@media screen and (max-width: $breakpoint-desktop){
+	.popup-container{	
+		width:90%;
+	}
+
+}
+@media screen and (max-width: $breakpoint-mobile){
+	.popup-container{
+	}
+}
+
+@media screen and (min-width: $breakpoint-mobile){
+	.popup-container{
+		
+	}
+}
+
+
+
+@media screen and (min-width: $breakpoint-tablet){
+	.popup-container{
+
+	}
+}
+@media screen and (min-width: $breakpoint-desktop){
+	
+	.popup-container{
+	}
+
+}
+@media screen and (min-width: $breakpoint-wide){}

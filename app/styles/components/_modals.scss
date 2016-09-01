@@ -1,0 +1,27 @@
+.save-modal{
+	padding:30px;
+
+	.field{
+		margin-bottom:0;
+	}
+
+	.enter{
+		position: absolute;
+		right:0;
+		top:0;
+		width:50px;
+		height:50px;
+		// background:;
+		border: 1px solid $border-color;
+		cursor: pointer;
+		transition: background-color 0.15s;
+		&:hover{
+			background-color: $yellow;
+		}
+
+	}
+}
+
+.modal-content{
+	position: relative;
+}

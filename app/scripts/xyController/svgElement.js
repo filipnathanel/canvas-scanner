@@ -22,26 +22,39 @@ export default class SVGElement{
 		}
 	}
 
-	init(options){
-
-		this.options = utils.extend( this.defaults, options);
-		this.el = this.createEl();
-		this.mapOptionsToAttributes();
+	get attributes(){
+		return this._attributes;
 	}
 
-	mapOptionsToAttributes(){
-		Object.keys( this.options ).forEach( (k, i) => {
-			this.el.setAttribute(k, this.options[k]);
+	set attributes(attributes){
+		if (this._attributes){
+			this._attributes =  utils.extend(this._attributes, attributes);
+		} else{
+			this._attributes = attributes;
+		}
+	}
+
+	init(options, attributes){
+
+		this.options = utils.extend( this.defaults, options);
+		this.attributes = utils.extend( this.attributes, options);
+		this.el = this.createEl();
+		this.mapAttributes();
+	}
+
+	mapAttributes(){
+		Object.keys( this.attributes ).forEach( (k, i) => {
+			this.el.setAttribute(k, this.attributes[k]);
 		});
 	}
 
 	createEl(){
-		return document.createElementNS(this.options.namespace, this.constructor.name.toLowerCase());
+		return document.createElementNS(this.options.namespace, this.options.name);
 	}
 
-	setOption(optionName, optionVal){
-		this.options[optionName] = optionVal;
-		this.mapOptionsToAttributes();
+	setAttribute(attributeName, attributeVal){
+		this.attributes[attributeName] = attributeVal;
+		this.mapAttributes();
 	}
 
 }

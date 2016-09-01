@@ -7,9 +7,6 @@ import Circle from './circle';
 import Path from './path';
 import PathData from './pathData';
 
-import ContextMenu from '../contextMenu/contextMenu';
-
-
 export default class XYController{
 
 	constructor(controller, options){
@@ -21,11 +18,6 @@ export default class XYController{
 		this.$svg = utils.getEl('.' + this.cssClass +'__area', this.$el);
 
 		this.pathData = new PathData( this.$svg );
-		this.pointContextMenu = new ContextMenu();
-
-		// buttons
-		this.$controls = utils.getEl('.' + this.cssClass + '__controls', this.$el);
-		this.$refresh = utils.getEl('.control--refresh', this.$controls);
 
 		this.init(options);
 		this.initEvents();
@@ -44,6 +36,11 @@ export default class XYController{
 	init(options){
 
 		this.options = utils.extend( this.defaults, options);
+		// buttons
+		this.$controls = utils.getEl('.' + this.cssClass + '__controls', this.$el);
+		this.$refresh = utils.getEl('.control--refresh', this.$controls);
+		this.$save = utils.getEl('.control--save', this.$controls);
+		this.$load = utils.getEl('.control--load', this.$controls);
 
 		// add the automation points at the beginning and at the end of the control space
 		this.addPoint(0, 50);
@@ -56,6 +53,14 @@ export default class XYController{
 
 		this.$refresh.addEventListener('click', (e)=>{
 			this.refresh();
+		});
+
+		this.$save.addEventListener('click', (e) => {
+			this.save();
+		});
+
+		this.$load.addEventListener('click', (e) => {
+			console.log(Globals.automationStore);
 		});
 
 	}
@@ -120,6 +125,17 @@ export default class XYController{
 
 		if (this.options.invert === true) return 1 - val;
 		return val;
+	}
+
+	save(){
+
+		// var dateNow = new Date();
+		// var saveName = dateNow.getMonth() + '_' + dateNow.getDay() + '_' + dateNow.getHours();
+
+			// Globals.automationStore.set(saveName, this.pathData.data);
+	}
+
+	load(){
 
 	}
 
