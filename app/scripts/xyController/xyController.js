@@ -60,7 +60,7 @@ export default class XYController{
 		});
 
 		this.$load.addEventListener('click', (e) => {
-			console.log(Globals.automationStore);
+			console.log(Globals.automationStore.getAll());
 		});
 
 	}
@@ -129,6 +129,13 @@ export default class XYController{
 
 	save(){
 
+		// Globals.saveModal.popup.openOverlay();
+		console.log(this.pathData);
+		Globals.saveModal.prepare( this.pathData );
+
+
+		// Globals.saveModal.openOverlay();
+
 		// var dateNow = new Date();
 		// var saveName = dateNow.getMonth() + '_' + dateNow.getDay() + '_' + dateNow.getHours();
 
@@ -136,7 +143,7 @@ export default class XYController{
 	}
 
 	load(){
-
+		Globals.loadModal.open( this );
 	}
 
 }

@@ -87,6 +87,7 @@ export default class PathData  {
 		point.el.addEventListener('mousedown', (e) => {
 			this.onPointLeftClick(e, point)	
 		});
+		// point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
 		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
 
 		this.data.insert(point);

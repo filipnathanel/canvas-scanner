@@ -1,5 +1,6 @@
 import popup from '../popup/popup';
 import * as utils from '../utils/utils';
+import Globals from '../globals';
 
 export default class saveModal {
 
@@ -15,7 +16,7 @@ export default class saveModal {
 	init(){
 		
 		this.popup = new popup(this.$el, { 
-			'trigger': '.control--save',
+			// 'trigger': '.control--save',
 			'afterOpen' : () => { this.afterOpen(); }
 		});
 
@@ -35,11 +36,13 @@ export default class saveModal {
 
 	afterOpen(){
 
+		let self = this;
+
 		function enterListener(e){
 
 			if( e.keyCode === 13 ){
 
-				this.submitData();
+				self.submitData();
 
 				document.removeEventListener('keypress' , enterListener);
 
@@ -56,15 +59,19 @@ export default class saveModal {
 		this.submitData();
 	}
 
+	prepare(data){
+		this.dataToSave = data;
+		this.popup.openOverlay();
+	}
+
 	submitData(){
 
 		let fileName = this.$input.value;
 			fileName = fileName.replace(/ /g, '-');
 		let now = new Date();
 		let saveName = fileName + '_' + now.getFullYear() + '_' + now.getMonth() + '_' + now.getDay() + '_' + now.getHours() + ':' + now.getMinutes();
-
-		console.log(saveName);
-		// Globals.automationStore.set(saveName, this.pathData.data);
+		
+		Globals.automationStore.set(saveName, this.dataToSave);
 
 		this.popup.closeOverlay();
 
