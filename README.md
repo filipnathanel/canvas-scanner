@@ -41,3 +41,8 @@ Clone the repo to your local machine:
 Then cd into the `canvas-scanner` directory and execute `npm install`
 
 After the npm will have finished installing you should be able to simply `gulp serve` to start up a server with livereload.
+
+## TODO
+
+- step by step tutorial on first visit
+- save / load functionality
