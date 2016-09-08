@@ -26,7 +26,7 @@ And from the less professional perspective:
 
 ## Development prerequisites
 
-You need to have [node.js](https://nodejs.org/) width up to date npm to develop this project.
+You need to have [node.js](https://nodejs.org/) with up to date npm to develop this project.
 
 ## Development process
 

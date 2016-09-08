@@ -1,5 +1,10 @@
 {
-  "private": true,
+  "name":"glitch-scanner",
+  "version":"0.6.0",
+  "description":"A canvas based scanner emulation for producing glitched art",
+  "homepage":"http://glitchscanner.com",
+  "license" : "MIT",
+  "private": false,
   "engines": {
     "node": ">=4"
   },
