@@ -1,5 +1,8 @@
 {% extends "./popup.html" %}
 
+{% import "../../macros/icon.html" as icon %}
+
+
 {% block classname %}save-popup{% endblock %}
 
 {% block popupContent %}
@@ -8,7 +11,7 @@
 		
 		<div class="modal-content">
 			<input type="text" placeholder="input save name" class="field">
-			<div class="enter"></div>
+			<div class="enter control">{{ icon.icon('save') }}</div>
 		</div>
 
 	</div>

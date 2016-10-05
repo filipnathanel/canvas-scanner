@@ -1,13 +1,21 @@
 import * as utils from '../utils/utils';
 import SVGUtils from '../utils/svgUtils';
-import Circle from './Circle';
-import Path from './Path';
+import Circle from './circle';
+import Path from './path';
+import PathPoint from './pathPoint'
 
-/**
- * NOTES
- * - should separate Points into own class
- * - should generalise slopeController for every different 
- */
+function spawnSortedArray(){
+	return new utils.SortedArray([], function(a,b){
+    	if (a.x === b.x) {
+        	if (a.y === b.y){
+        		return 0;
+        	}else{
+        		return a.y < b.y ? -1 : 1;
+        	}
+        }
+        return a.x < b.x ? -1 : 1;
+	});
+}
 
 export default class PathData  {
 
@@ -15,185 +23,86 @@ export default class PathData  {
 
 		this.$svg = svg;
 
-		this.data = new utils.SortedArray([], function(a,b){		
-	        if (a.x === b.x) {
-	        	if (a.y === b.y){
-	        		return 0
-	        	}else{
-	        		return a.y < b.y ? -1 : 1;
-	        	}
-	        }
-	        return a.x < b.x ? -1 : 1;
-		});
+		this.data = spawnSortedArray();
 
 		this.initEvents();
 
-	}
-
-	get svgWidth(){ 
-		var box = this.$svg.getBoundingClientRect();
-		return box.right-box.left;
-	}
-	get svgHeight(){ 
-		var box = this.$svg.getBoundingClientRect();
-		return box.bottom-box.top;
 	}
 
 	initEvents(){
 		this.$svg.addEventListener('contextmenu', (e) => { this.onAreaRightClick(e); });
 	}
 
-
-	/**
-	 * TRANSORMATIONS FUNCTIONS
-	 */
-
-	absWToRel(px){
-		return px * 100 / this.svgWidth;
-	}
-
-	absHToRel(px){
-		return px * 100 / this.svgHeight;
-	}
-
-	relWToAbs(percent){
-		return percent/100 * this.svgWidth;
-	}
-
-	relHToAbs(percent){
-		return percent/100 * this.svgHeight;
-	}
-
 	/**
 	 * Add an automation point to the controller
-	 * @param {int} x x axis coordinate
-	 * @param {int} y y axis coordinate
+	 * @param {float} x a percent of the x axis at which we are adding the point
+	 * @param {float} y a percent of the y axis at which we are adding the point
 	 */
-	addPoint(x, y, type = 'linear'){
+	addPoint(x, y, type = 'linear', slope = 0){
 
-		var point = new Circle({
-			cx: this.relWToAbs(x),
-			cy: this.relHToAbs(y),
-			r: 4,
-		}, this.$svg);
+		var point = new PathPoint(x, y, type, slope);
 
-		point.x = x;
-		point.y = y;
-		point.type = type;
-		point.slope = 0;
+		point.render(this.$svg);
 
-		point.el.classList.add('automation-point');
+		point.on('update', this.updatePointHandler.bind(this));
+		point.on('remove', this.removePointHandler.bind(this));
 
-		point.el.addEventListener('mousedown', (e) => {
-			this.onPointLeftClick(e, point)	
-		});
-		// point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
-		point.el.addEventListener('contextmenu', (e) => {this.onPointRightClick(e, point);} )
+		this.data.insert(point);
+
+		this.redrawPaths();
+
+	}
+
+	updatePointHandler(data){
+
+		let point = data.point,
+			circle = data.circle,
+			xPos = data.xPos,
+			yPos = data.yPos,
+			pointLocation = this.data.search(point);
+
+		this.data.remove(point);
+
+		if ( pointLocation != 0 && pointLocation < this.data.array.length){
+			circle.setAttribute('cx', xPos);
+			point.x = SVGUtils.absWToRel(data.xPos, this.$svg);
+		}
+
+		circle.setAttribute('cy', yPos);
+		point.y = SVGUtils.absHToRel(data.yPos, this.$svg);
 
 		this.data.insert(point);
 
 		this.redrawPaths();
 	}
 
-	removePoint(point){
+	removePointHandler(data){
 
-		if (point.el){
-			point.el.remove();
-		}
+		let point = data.point;
+
+		this.data.remove(point);
+
 		if (point.path){
 			point.path.el.remove();
 		}
 		if (point.slopeControl){
 			point.slopeControl.el.remove();
 		}
-		this.data.remove(point);
 
 		this.redrawPaths();
-
+		
 	}
 
 	onAreaRightClick(e){
-		e.preventDefault();
-		var mousePos = SVGUtils.mousePos(e, this.$svg);
-		this.addPoint(this.absWToRel(mousePos.x), this.absHToRel(mousePos.y), 'quadratic');
-	}
-
-	/**
-	 * Left mouse button click handler (changing position of automation points)
-	 * @param  {Event} 	e 		default event passed from EventListenere
-	 * @param  {Circle} point 	a Circle object on which the event is invoked
-	 * @return {void} 
-	 */
-	onPointLeftClick(e, point){
-
+		
 		e.preventDefault();
 
-		var self = this,
-			selectedPoint = e.target,
-			clickPos = SVGUtils.mousePos(e, this.$svg),
-			posDiff = { 
-				x: selectedPoint.getAttribute('cx') - clickPos.x,
-				y: selectedPoint.getAttribute('cy') - clickPos.y
-			};
+		let mousePos = SVGUtils.mousePos(e, this.$svg),
+			relX = SVGUtils.absWToRel(mousePos.x, this.$svg),
+			relY = SVGUtils.absHToRel(mousePos.y, this.$svg);
 
-		function dragHandler(e) {
-
-			var pointLocation = self.data.search(point);
-
-			self.data.remove(point);
-
-			var movePos = SVGUtils.mousePos(e, self.$svg),
-				xPos = movePos.x + posDiff.x,
-				yPos = movePos.y + posDiff.y;	
-
-			// guard the xPos
-			if (xPos < 0){
-				xPos = 0;
-			} else if (xPos > self.svgWidth){
-				xPos = self.svgWidth;
-			}
-			
-			// guard the yPos
-			if (yPos < 0){
-				yPos = 0;
-			} else if (yPos > self.svgHeight){
-				yPos = self.svgHeight;
-			}
-
-			// don't change the xPos for automation start and end
-			if ( pointLocation != 0 && pointLocation < self.data.array.length){
-				point.setAttribute('cx', xPos);
-				point.x = self.absWToRel(xPos);
-			}
-			point.setAttribute('cy', yPos);
-			point.y = self.absHToRel(yPos);
-
-			var newPoint = point;
-
-			self.data.insert(newPoint);
-
-			self.redrawPaths();
-
-		}
-
-		function onMouseUp(){
-			document.removeEventListener('mousemove', dragHandler);
-			document.removeEventListener('mouseup', onMouseUp);
-		}
-
-		// attach drag handler
-		document.addEventListener('mousemove', dragHandler);
-		// listen for the drag end
-		document.addEventListener('mouseup', onMouseUp);
-	}
-
-	onPointRightClick(e, point){
-
-		e.preventDefault();
-		e.stopPropagation();
-
-		this.removePoint(point);
-
+		this.addPoint( relX, relY, 'quadratic');
+		
 	}
 
 	getPathAtPercent(x){
@@ -262,10 +171,10 @@ export default class PathData  {
 	createPath(pathFrom, pathTo){
 
 		var type = pathFrom.type,
-			x1 = this.relWToAbs(pathFrom.x),
-			y1 = this.relHToAbs(pathFrom.y),
-			x2 = this.relWToAbs(pathTo.x),
-			y2 = this.relHToAbs(pathTo.y),
+			x1 = SVGUtils.relWToAbs(pathFrom.x, this.$svg),
+			y1 = SVGUtils.relHToAbs(pathFrom.y, this.$svg),
+			x2 = SVGUtils.relWToAbs(pathTo.x, this.$svg),
+			y2 = SVGUtils.relHToAbs(pathTo.y, this.$svg),
 			slope = pathFrom.slope;
 
 		switch(type){
@@ -426,9 +335,22 @@ export default class PathData  {
 
 		this.data.array.forEach( (point) => {
 
-			point.setAttribute('cx', this.relWToAbs(point.x));
-			point.setAttribute('cy', this.relHToAbs(point.y))
+			point.circle.el.remove();
+			point.render(this.$svg);
+
 		});
+	}
+
+	reset(){
+
+		// as the Path Data is self ordering after remobing it's items
+		// we only have to remove first item.
+		while( this.data.array.length > 0 ){
+			this.data.array[0].removeCircle();
+		}
+
+		this.data = spawnSortedArray();
+
 	}
 
 }

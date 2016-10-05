@@ -38,17 +38,22 @@ export default class Automation {
 	initEvents(){
 
 		this.controllers.forEach((controller, i) => {
+
+			// refresh icon event listener
 			utils.getEl('.control--enable', controller.$el).addEventListener('click', (e)=>{
 				this.setActiveController(i);
 			});
 
+			// controller svg event
+			controller.$el.addEventListener('click', (e) => {
+				if (controller.$el.classList.contains(controller.cssClass + '--disabled')){
+					this.setActiveController(i);
+				}
+			});
+
 		});
 
-		Globals.onResize.add(() => {
-			this.controllers.forEach((controller) => {
-				// controller.pathData.redraw();
-			})
-		})
+		Globals.onResize.add(() => {});
 	}
 
 	layout(){
@@ -84,7 +89,7 @@ export default class Automation {
 			setTimeout( ()=>{
 				controller.pathData.redrawPoints();
 				controller.pathData.redrawPaths();
-			} )
+			} );
 
 		});
 	}

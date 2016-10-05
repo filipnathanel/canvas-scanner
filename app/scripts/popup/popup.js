@@ -32,6 +32,10 @@ export default class popupOverlay {
         } else{
             console.log("supplied popup element doesn't exist");
         }
+
+        // bind this value to eventHandler
+        // this is one of the way to achieve nice event add/remove functionality
+        this.onEscPress = this.onEscPress.bind(this);
         
     }
 
@@ -82,7 +86,6 @@ export default class popupOverlay {
         }
         if ( self.options.closeButton && self.$el.querySelector(self.options.closeButton) ){
             self.$el.querySelector(self.options.closeButton).addEventListener("click", function(event){
-                // console.log("close Handler");
                 self.triggerHandler(event, self);
             });
         }
@@ -95,9 +98,8 @@ export default class popupOverlay {
             self.openOverlay();
         } else if (self.open === true){
            self.closeOverlay(); 
-        } else{
-            // console.log('Overlay toggle unpredicted state');
         }
+        
     }
 
     openOverlay(){
@@ -109,6 +111,7 @@ export default class popupOverlay {
         self.$el.classList.add('open');
         document.body.classList.add('popup-opened');
         self.addOverlayClick();
+        self.addEscListener();
 
         var container = document.querySelector(self.options.container),
             vh = utils.updateViewportDimensions().height,
@@ -143,6 +146,7 @@ export default class popupOverlay {
         self.$el.classList.add('close');
         document.body.classList.remove('popup-opened');
         self.removeOverlayClick();
+        self.removeEscListener();
 
        if ( self.supports.transitions ){
 
@@ -193,5 +197,18 @@ export default class popupOverlay {
         this.$el.removeEventListener('click', function(e){self.onOverlayClick(e,this)} );
     }
 
+    addEscListener(){
+        document.addEventListener('keydown', this.onEscPress );
+    }
+
+    removeEscListener(){
+        document.removeEventListener('keydown', this.onEscPress );
+    }
+
+    onEscPress(e){
+        if (e.keyCode === 27){
+            this.closeOverlay();
+        }
+    }
 
 }

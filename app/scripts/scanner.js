@@ -7,8 +7,17 @@ import ScanResult from './scanResult';
 import Automation from './automation';
 import XYController from './xyController/xyController';
 
+/**
+ * This is the main Scanner class 
+ * it initalises it's dependencies and contains the actual scan algorithm
+ */
 export default class Scanner {
 
+	/**
+	 * [constructor description]
+	 * @param  {string} scanner a css type selector for the scanner EL
+	 * @return {undefined}
+	 */
 	constructor(scanner){
 
 		this.DPI = 72;
@@ -44,21 +53,31 @@ export default class Scanner {
 	// events initialisation
 	initEvents(){
 
-		this.$scanner.addEventListener('imageUpdate', (e) => {this.onImageUpdated(e)});
-		this.$scanButton.addEventListener('click', (e) => {this.onScanClick(e)});
-
+		this.$scanner.addEventListener('imageUpdate', (e) => {this.imageUpdateHandler(e)});
+		this.$scanButton.addEventListener('click', (e) => {this.scanClickHandler(e)});
 		Globals.onResize.add( () => { this.scanArea.redraw() } );
+
 	}
 
-	onImageUpdated(e){
+	/**
+	 * a function that handles the imageUpdated Event
+	 * the imageUpdated Event is a Custom Event triggered
+	 * when a new Image is loaded into a scanner
+	 * @param  {Event} e CustomEvent with a File passed in Event Details
+	 * @return {undefined}
+	 */
+	imageUpdateHandler(e){
 
 		var file = e.detail.file;
 
 		if (file){
 
+			// remove any previous images from Scanner Object
 			this.scanArea.image = null;
+			// clean the ScanArea canvas from remainders of any previous operations
 			this.scanArea.context.clearRect(0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height);
 
+			// Asynchonously transform the File into Image
 			this.loadFile(file).then( (image) => {
 
 				this.image = image;
@@ -70,10 +89,18 @@ export default class Scanner {
 
 		}
 
-
 	}
 
+	/**
+	 * makes the file set on the Input Element available to browser context
+	 * @param  {File} file receives any File object that could be taken from an input element
+	 * @return {Promise} returns a promise that resolves to an Image Object
+	 */
+	
+	// TODO: could be separated to a general fileReader that returns more file types than just an Image
+	
 	loadFile(file){
+
 		var fr = new FileReader();
 
 		return new Promise((resolve, reject) => {
@@ -122,7 +149,7 @@ export default class Scanner {
 	}
 
 	// scan trigger
-	onScanClick(e){
+	scanClickHandler(e){
 		if( this.scanArea.imageLoaded === true && this.scanning === false ){
 			// this.wtfScan();
 			this.scan();
@@ -131,118 +158,6 @@ export default class Scanner {
 		}
 
 	}
-
-	wtfScan(){
-
-		var start = performance.now();
-		var mainScan = this.scanArea.context.getImageData( 0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height ) ;
-		var pixels = mainScan.data;
-
-		var xMax = mainScan.width;
-		var yMax = mainScan.height;
-		var lenn = pixels.length;
-
-		// console.log(pixels);
-
-		var transformedPixels = [];
-
-		// loop enough times to represent whole image
-		for( var i = 0; i < xMax ; i++){
-
-			// rownanie ogólne funkcji
-			//  f(x) = ax + b
-			// var xChange = xVal ? (this.canvas.width - this.image.width ) * xVal : (this.canvas.width - this.image.width) / 2 ,
-			var progress = i / xMax ;
-
-			// zlupuj row
-			// for (var j = 0; j < lenn; j+= yMax){
-			// 	// transformedPixels.push(pixels[j+i]);
-			// 	transformedPixels[transformedPixels.length] = (pixels[j+i]);
-			// }
-
-			// console.log(progress)
-			var change = this.automation.getValueAtPercent(progress);
-
-			// var wartoscX = i * change.x;
-
-			var angle = Math.round((-45 + 90 * change.rotation) * 100) / 100 ;
-			// console.log('angle: ' + angle)
-			var wspolczynnik = Math.tan(angle);
-
-			console.log(wspolczynnik);
-
-
-			// var rezultat = wspolczynnik * wartoscX;
-
-		}
-		// console.log(transformedPixels);
-
-		var end = performance.now();
-		var duration = end - start;
-		console.log(duration)
-
-	}
-
-
-	alternativeScan(){
-
-		var self = this;
-		
-		var stepsDone = 0,
-			maxSteps = 2000;
-
-		var frameRequested = false;
-		var scannedBuffer = []
-
-		function preview(step, scanned){
-
-			if (frameRequested === false){
-
-				frameRequested = true;
-
-				window.requestAnimationFrame(() => {
-					drawResult(step);
-				});
-
-			} else {
-				scannedBuffer.push(scanned);
-				// scannedBuffer = utils.concatenate(Uint8Array, scannedBuffer, scanned.data);
-			}
-
-		}
-
-		function drawResult(step){
-			// console.log(scannedBuffer);
-			// self.scanResult.context.putImageData();
-			// console.log(step);
-			frameRequested = false;
-		 // scanned, currentStep, 0, 0, 0, scanned.width, scanned.height 
-		}
-
-		while( stepsDone <= this.scanArea.canvas.width && stepsDone < maxSteps){
-
-			let step = stepsDone;
-
-			setTimeout( () => {
- 
-				var progress = step / this.scanArea.canvas.width;
-
-				var change = this.automation.getValueAtPercent(progress);
-
-				this.scanArea.moveImage(change.x, change.y, change.rotation);
-				
-				var scanned = this.scanArea.context.getImageData( stepsDone, 0, 1, this.scanArea.canvas.height ) ;
-				// console.log(scannedLine);
-				preview(step, scanned);
-				// this.scanResult.context.putImageData( scannedLine, stepsDone, 0, 0, 0, 1, scannedLine.height );
-				
-			}, 0)
-
-			stepsDone++;
-
-		}
-
-	}	
 
 	scan(){
 

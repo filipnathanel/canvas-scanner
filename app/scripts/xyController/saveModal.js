@@ -36,13 +36,11 @@ export default class saveModal {
 
 	afterOpen(){
 
-		let self = this;
-
-		function enterListener(e){
+		let enterListener = (e) => {
 
 			if( e.keyCode === 13 ){
 
-				self.submitData();
+				this.submitData();
 
 				document.removeEventListener('keypress' , enterListener);
 
@@ -60,7 +58,11 @@ export default class saveModal {
 	}
 
 	prepare(data){
-		this.dataToSave = data;
+
+		this.dataToSave = data.array.map( (PathPoint) => {
+			return this.pathPointFilter(PathPoint);
+		});
+
 		this.popup.openOverlay();
 	}
 
@@ -69,14 +71,27 @@ export default class saveModal {
 		let fileName = this.$input.value;
 			fileName = fileName.replace(/ /g, '-');
 		let now = new Date();
-		let saveName = fileName + '_' + now.getFullYear() + '_' + now.getMonth() + '_' + now.getDay() + '_' + now.getHours() + ':' + now.getMinutes();
+		let saveName = fileName + '_' + now.getFullYear() + '_' + now.getMonth() + 1 + '_' + now.getDate() + '_' + now.getHours() + ':' + now.getMinutes();
 		
 		Globals.automationStore.set(saveName, this.dataToSave);
 
 		this.popup.closeOverlay();
-
 	}
 
+	pathPointFilter( PathPoint ){
 
+		let allowedProps = ['x','y','type','slope'];
+
+		let PathPointFiltered = {}
+
+		for (let prop in PathPoint){
+			if (PathPoint.hasOwnProperty(prop) && allowedProps.indexOf(prop) > -1){
+				PathPointFiltered[prop] = PathPoint[prop];
+			}
+		}
+
+		return PathPointFiltered;
+
+	}
 
 }

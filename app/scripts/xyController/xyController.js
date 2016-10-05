@@ -24,15 +24,6 @@ export default class XYController{
 
 	}
 
-	get svgWidth(){ 
-		var box = this.$svg.getBoundingClientRect();
-		return box.right-box.left;
-	}
-	get svgHeight(){ 
-		var box = this.$svg.getBoundingClientRect();
-		return box.bottom-box.top;
-	}
-
 	init(options){
 
 		this.options = utils.extend( this.defaults, options);
@@ -42,25 +33,24 @@ export default class XYController{
 		this.$save = utils.getEl('.control--save', this.$controls);
 		this.$load = utils.getEl('.control--load', this.$controls);
 
-		// add the automation points at the beginning and at the end of the control space
-		this.addPoint(0, 50);
-		this.addPoint(100, 50, 'linear');
+		// the starting points have their x Pos out of scale
+		// so the user added point don't take their limiter behaviour
+		this.pathData.addPoint(-0.01, 50, 'quadratic', 0, 'start');
+		this.pathData.addPoint(100.01, 50, 'linear', 0, 'end');
 
 	}
 
 	initEvents(){
 		Globals.onResize.add( () => {this.onResize()}  );
 
-		this.$refresh.addEventListener('click', (e)=>{
-			this.refresh();
-		});
+		this.$refresh.addEventListener('click', this.onRefreshClick.bind(this));
 
 		this.$save.addEventListener('click', (e) => {
-			this.save();
+			this.onSaveClick();
 		});
 
 		this.$load.addEventListener('click', (e) => {
-			console.log(Globals.automationStore.getAll());
+			this.onLoadClick();
 		});
 
 	}
@@ -72,29 +62,13 @@ export default class XYController{
 		this.pathData.redrawPaths();
 	}
 
-	refresh(){
+	onRefreshClick(){
 
-		var arrLen = this.pathData.data.array.length;
+		this.pathData.reset();
 
-		// as the Path Data is self ordering after remobing it's items
-		// we only have to remove first item.
-		while( this.pathData.data.array.length > 0 ){
-			this.pathData.removePoint(this.pathData.data.array[0]);
-		}
-
-		this.addPoint(0, 50);
-		this.addPoint(100, 50, 'linear');
+		this.pathData.addPoint(-0.1, 50, 'quadratic', 0);
+		this.pathData.addPoint(100.1, 50, 'linear', 0);
 		
-	}
-
-	/**
-	 * short interface for PathData 
-	 * @param {int} x    	x pos expressed in percent
-	 * @param {int} y    	y pos expiressd in percent
-	 * @param {string} type connection type
-	 */
-	addPoint(x, y, type = 'quadratic'){
-		this.pathData.addPoint(x, y, type);
 	}
 
 	getValueAtPercent( percent ){
@@ -127,23 +101,19 @@ export default class XYController{
 		return val;
 	}
 
-	save(){
-
-		// Globals.saveModal.popup.openOverlay();
-		console.log(this.pathData);
-		Globals.saveModal.prepare( this.pathData );
-
-
-		// Globals.saveModal.openOverlay();
-
-		// var dateNow = new Date();
-		// var saveName = dateNow.getMonth() + '_' + dateNow.getDay() + '_' + dateNow.getHours();
-
-			// Globals.automationStore.set(saveName, this.pathData.data);
+	onSaveClick(){
+		Globals.saveModal.prepare( this.pathData.data );
 	}
 
-	load(){
+	onLoadClick(){
+		// Open the load modal and pass the reference to current controller.
 		Globals.loadModal.open( this );
+	}
+
+	loadPathData( pathData ){
+		// console.log(pathData);
+		// this.pathData.data = pathData;
+		// this.pathData.
 	}
 
 }
