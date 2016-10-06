@@ -1,5 +1,4 @@
 import * as utils from './utils/utils';
-import Globals from './globals';
 
 import Canvas from './canvas';
 
@@ -22,17 +21,11 @@ export default class ScanArea extends Canvas {
 
 	initEvents(){
 
-		Globals.onResize.add(() => { 
-			// console.log('scanArea onresize trigerred');
-		});
-
 	}
 
 	drawImage(image){
 
 		this.image = image;
-
-		console.log({image:image})
 
 		this.context.drawImage(this.image, (this.canvas.width - image.width) / 2, (this.canvas.height - image.height) / 2);
 		this.imageLoaded = true;
@@ -79,11 +72,3 @@ export default class ScanArea extends Canvas {
 
 
 }
-
-/**
- 
-scanArea.canvas
-scanArea.context
-
- 
- */

@@ -111,9 +111,15 @@ export default class XYController{
 	}
 
 	loadPathData( pathData ){
-		// console.log(pathData);
-		// this.pathData.data = pathData;
-		// this.pathData.
+
+		this.pathData.reset();
+
+		utils.forEach(pathData, point => {
+			this.pathData.addPoint(point.x, point.y, point.type, point.slope);
+		});
+
+		Globals.loadModal.close();
+
 	}
 
 }

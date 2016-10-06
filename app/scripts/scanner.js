@@ -14,7 +14,6 @@ import XYController from './xyController/xyController';
 export default class Scanner {
 
 	/**
-	 * [constructor description]
 	 * @param  {string} scanner a css type selector for the scanner EL
 	 * @return {undefined}
 	 */
@@ -68,7 +67,7 @@ export default class Scanner {
 	 */
 	imageUpdateHandler(e){
 
-		var file = e.detail.file;
+		let file = e.detail.file;
 
 		if (file){
 
@@ -101,7 +100,7 @@ export default class Scanner {
 	
 	loadFile(file){
 
-		var fr = new FileReader();
+		let fr = new FileReader();
 
 		return new Promise((resolve, reject) => {
 
@@ -109,8 +108,8 @@ export default class Scanner {
 			
 			fr.addEventListener('load', (e) => {
 
-				var rawImage = e.target.result;
-				var image = new Image();
+				let rawImage = e.target.result;
+				let image = new Image();
 
 				image.addEventListener('load',() =>{
 					resolve(image);
@@ -125,15 +124,15 @@ export default class Scanner {
 
 	rescaleScanAreas(image){
 
-		var a4BaseWidth = 842;
-		var a4BaseHeight = 595;
+		let a4BaseWidth = 842;
+		let a4BaseHeight = 595;
 
-		var scanWidth = image.width + image.width * 0.2;
-		var scanHeight = image.height + image.height * 0.2;
+		let scanWidth = image.width + image.width * 0.2;
+		let scanHeight = image.height + image.height * 0.2;
 
-		var widthDPI = Math.round( scanWidth / a4BaseWidth * 72);
-		var heightDPI = Math.round( scanHeight / a4BaseHeight * 72);
-		var DPI = widthDPI >= heightDPI ? widthDPI : heightDPI;
+		let widthDPI = Math.round( scanWidth / a4BaseWidth * 72);
+		let heightDPI = Math.round( scanHeight / a4BaseHeight * 72);
+		let DPI = widthDPI >= heightDPI ? widthDPI : heightDPI;
 
 		// we need to handle scaling down as well
 		if ( this.scanArea.canvas.width < image.width + image.width * 0.2 || this.scanArea.canvas.height < image.height + image.height * 0.2){
@@ -164,29 +163,29 @@ export default class Scanner {
 		this.scanning = true;
 		this.$scanner.classList.add('scanner--active');
 
-		var self = this;
-		var start = null;
-		var scansPerFrame = 3;
+		let self = this;
+		let start = null;
+		let scansPerFrame = 3;
 
-		// 16.667 is roughly the framelength
-		var duration = (self.scanArea.canvas.width * 17) / scansPerFrame;
-		var progress = 0;
+		// 16.667ms is roughly the framelength
+		let duration = (self.scanArea.canvas.width * 17) / scansPerFrame;
+		let progress = 0;
 
-		var currentStep = 0;
-		var newStep = 0;
+		let currentStep = 0;
+		let newStep = 0;
 
 		function scanLoop(timestamp){
 			
-			for (var i = 0; i < scansPerFrame; i++) {
+			for (let i = 0; i < scansPerFrame; i++) {
 
 				progress = currentStep / self.scanArea.canvas.width;
 
 				if (currentStep > 0){
-					var scanned = self.scanArea.context.getImageData(currentStep, 0, 1, self.scanArea.canvas.height );
+					let scanned = self.scanArea.context.getImageData(currentStep, 0, 1, self.scanArea.canvas.height );
 					self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
 				}
 
-				var change = self.automation.getValueAtPercent(progress);
+				let change = self.automation.getValueAtPercent(progress);
 				self.scanArea.moveImage(change.x, change.y, change.rotation);
 
 				currentStep++;
@@ -229,7 +228,7 @@ export default class Scanner {
 	 */
 	addFile(file){
 
-		var addFileEvent = new CustomEvent('imageUpdate', {
+		let addFileEvent = new CustomEvent('imageUpdate', {
 			detail:file
 		});
 

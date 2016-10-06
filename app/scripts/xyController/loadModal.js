@@ -43,6 +43,10 @@ export default class loadModal {
 
 	}
 
+	close(){
+		this.popup.closeOverlay();
+	}
+
 	renderStoreItems(xyController){
 
 		this.popupItems = [];

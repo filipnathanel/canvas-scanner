@@ -1,5 +1,4 @@
 import * as utils from './utils/utils';
-import Globals from './globals';
 
 import Canvas from './canvas';
 
@@ -20,11 +19,7 @@ export default class ScanResult extends Canvas {
 
 	initEvents(){
 
-		Globals.onResize.add(() => { 
-			// console.log('scanResult onResize trigerred');
-		});
-
-		this.downloadButton.addEventListener('click', (e)  =>{
+		this.downloadButton.addEventListener('click', (e)  => {
 
 			var image = this.trimResult();
 
