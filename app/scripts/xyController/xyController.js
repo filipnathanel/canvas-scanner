@@ -92,12 +92,16 @@ export default class XYController{
 
 		var $path = this.pathData.data.array[currentPathIndex].path;
 
+
 		if ($path){
 			var coords = $path.el.getPointAtLength($path.el.getTotalLength() * xPercent);
-			var val = coords.y / this.svgHeight;
+			var val = coords.y / SVGUtils.height(this.$svg);
 		}
 
 		if (this.options.invert === true) return 1 - val;
+
+		// console.log(val);
+
 		return val;
 	}
 
