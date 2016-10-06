@@ -116,7 +116,7 @@ export default class PathPoint extends Emitter {
 		e.preventDefault();
 		e.stopPropagation();
 
-		this.remove();
+		this.removeCircle();
 
 	}
 
