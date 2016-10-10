@@ -2,6 +2,10 @@ import * as utils from './utils/utils';
 
 import Canvas from './canvas';
 
+/**
+ * A class to handle the canvas containng the result of scanning
+ */
+
 export default class ScanResult extends Canvas {
 
 	constructor(scanResult, context){
@@ -10,6 +14,7 @@ export default class ScanResult extends Canvas {
 
 		this.init();
 		this.initEvents();
+
 	}
 
 	init(){
@@ -39,6 +44,10 @@ export default class ScanResult extends Canvas {
 
 	}
 
+	/**
+	 * trims the canvas to return only painted pixels
+	 * @return {text} Image in URL format
+	 */
 	// as per https://gist.github.com/remy/784508
 	trimResult(){
 
@@ -99,10 +108,19 @@ export default class ScanResult extends Canvas {
 
 	}
 
+	/**
+	 * This method allows to bypass the Network Error when trying to download
+	 * a file set <a> element via a.href = canvas.toDataUrl()
+	 * @param  {dataUrl} dataUrl
+	 * @return {Blob} a Blob containing the data to Save
+	 */
 	dataUrlToBlob(dataUrl){
 	    
-	    var arr = dataUrl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-	        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+	    var arr = dataUrl.split(','), 
+	    	mime = arr[0].match(/:(.*?);/)[1],
+	    	bstr = atob(arr[1]), 
+	    	n = bstr.length, 
+	    	u8arr = new Uint8Array(n);
 	    
 	    while(n--){
 		        u8arr[n] = bstr.charCodeAt(n);

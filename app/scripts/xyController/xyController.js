@@ -7,6 +7,10 @@ import Circle from './circle';
 import Path from './path';
 import PathData from './pathData';
 
+/**
+ * A Class for XY Controller
+ */
+
 export default class XYController{
 
 	constructor(controller, options){
@@ -27,6 +31,7 @@ export default class XYController{
 	init(options){
 
 		this.options = utils.extend( this.defaults, options);
+
 		// buttons
 		this.$controls = utils.getEl('.' + this.cssClass + '__controls', this.$el);
 		this.$refresh = utils.getEl('.control--refresh', this.$controls);
@@ -83,15 +88,16 @@ export default class XYController{
 
 		// if currentPath isn't the last one
 		if (this.pathData.data.array[nextPathIndex]){
+			// find where exactly on the path we are
 			var xWidth = this.pathData.data.array[nextPathIndex].x - currentPath.x,
 				relativeX = percent - currentPath.x,
 				xPercent = relativeX / xWidth;
 		}else{
+		// if it is the last path of the automation set the value to it's y pos
 			var val = currentPath.y/100;
 		}
 
 		var $path = this.pathData.data.array[currentPathIndex].path;
-
 
 		if ($path){
 			var coords = $path.el.getPointAtLength($path.el.getTotalLength() * xPercent);
@@ -99,8 +105,6 @@ export default class XYController{
 		}
 
 		if (this.options.invert === true) return 1 - val;
-
-		// console.log(val);
 
 		return val;
 	}

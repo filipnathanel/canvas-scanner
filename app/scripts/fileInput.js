@@ -1,6 +1,10 @@
 import EventQueue from './utils/eventQueue';
 import * as utils from './utils/utils';
 
+/**
+ * Class handling <input> element behaviour
+ */
+
 export default class FileInput {
 	
 	constructor(inputEl){
@@ -21,17 +25,26 @@ export default class FileInput {
 
 	initEvents(){
 
-		this.$el.addEventListener('change', 
-			(e) => {
+		this.$el.addEventListener('change', fileChangeHandler.bind(this) );
 
-				var file = this.$el.files[0];
+	}
 
-				if( this.isFileAllowed(file) ){
-					this.onFileChanged.run({ file: file }) ;
-				}else{
-					this.onWrongFileType.run({ type: this.getFileType(file)} );
-				}
-			});
+	/**
+	 * handler for <input> file change
+	 * @param  {Event} e an Event object containing a ref to the file(s) passed
+	 * @return {undefined}
+	 *
+	 * @todo allow multiple file handling
+	 */
+	fileChangeHandler(e){
+
+		var file = this.$el.files[0];
+
+		if( this.isFileAllowed(file) ){
+			this.onFileChanged.run({ file: file }) ;
+		}else{
+			this.onWrongFileType.run({ type: this.getFileType(file)} );
+		}
 
 	}
 

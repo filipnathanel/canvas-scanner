@@ -2,6 +2,10 @@ import * as utils from './utils/utils';
 
 import Canvas from './canvas';
 
+/**
+ * A class that emulates the scanner surface
+ */
+
 export default class ScanArea extends Canvas {
 	
 	constructor(scanArea, context){
@@ -9,7 +13,6 @@ export default class ScanArea extends Canvas {
 		super(scanArea, context);
 
 		this.init();
-		this.initEvents();
 		
 	}
 
@@ -19,10 +22,11 @@ export default class ScanArea extends Canvas {
 
 	}
 
-	initEvents(){
-
-	}
-
+	/**
+	 * Draws an image in the middle of the canvas
+	 * @param  {Image} image: an Image
+	 * @return {undefined}
+	 */
 	drawImage(image){
 
 		this.image = image;
@@ -42,6 +46,13 @@ export default class ScanArea extends Canvas {
 		this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 	
+	/**
+	 * Draws an Image on the Canvas accordingly to passed x y and rotation values
+	 * @param  {float} xVal: xmovenet
+	 * @param  {float} yVal: ymovement
+	 * @param  {float} rotation: rotation in degs
+	 * @return {undefined}
+	 */
 	moveImage(xVal, yVal, rotation){
 
 		this.clear();
@@ -63,12 +74,11 @@ export default class ScanArea extends Canvas {
 			this.context.restore();
 
 		}else{
+
 			this.context.drawImage( this.image, xChange , yChange);
+
 		}
 
-
-
 	}
-
 
 }
