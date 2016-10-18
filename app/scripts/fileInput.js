@@ -25,7 +25,7 @@ export default class FileInput {
 
 	initEvents(){
 
-		this.$el.addEventListener('change', fileChangeHandler.bind(this) );
+		this.$el.addEventListener('change', this.fileChangeHandler.bind(this) );
 
 	}
 
