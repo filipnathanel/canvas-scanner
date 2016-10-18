@@ -117,8 +117,8 @@ class PopupItem{
 		el.classList.add(this.cssClass);
 
 		let template = `<div class="${this.cssClass}__name field">${this.itemName}</div>
-			<div class="${this.cssClass}__load control"><div class="icon"><svg viewBox="0 0 32 32" xml:space="preserve"><use xlink:href="#download"></use></svg></div></div>
-			<div class="${this.cssClass}__delete control"><div class="icon"><svg viewBox="0 0 32 32" xml:space="preserve"><use xlink:href="#repeat"></use></svg></div></div>`;
+			<div class="${this.cssClass}__load control" title="load"><div class="icon"><svg viewBox="0 0 32 32" xml:space="preserve"><use xlink:href="#download"></use></svg></div></div>
+			<div class="${this.cssClass}__delete control" title="delete"><div class="icon"><svg viewBox="0 0 32 32" xml:space="preserve"><use xlink:href="#repeat"></use></svg></div></div>`;
 
 		el.innerHTML = template;
 
@@ -130,6 +130,8 @@ class PopupItem{
 	}
 
 	delete(){
+		Globals.automationStore.remove(this.storeItem);
+		this.$el.remove();
 		console.log('deleteClicked');
 	}
 }
