@@ -7,7 +7,7 @@
 export function extend( defaults, options ) {
     // ES6
     if (typeof Object.assign === 'function'){
-        return Object.assign({},defaults,options);
+        return Object.assign({}, defaults, options);
     // ES5
     }else{
         var extended = {};
@@ -85,7 +85,7 @@ export {waitForFinalEvent};
 export function getEl(el, context = document){
 
     if (typeof el === 'string'){
-        if(el.indexOf('#') == 0){
+        if(el.indexOf('#') == 0 && el.indexOf(' ') <= 0){
             return document.getElementById(el.substr(1));
         }else{
             return context.querySelector(el);

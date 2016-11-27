@@ -80,12 +80,6 @@
 		    <div class="g-all roadmap">
 		    	<h2 class="h2">Further Developements:</h2>
 		    	<ul class="roadmap__list">
-		    		<li>add context menu to automation points
-		    			<ul>
-		    				<li>delete</li>
-		    				<li>path type select (linear/quadratic/bezier/sine)</li>
-		    			</ul>
-		    		</li>
 		    		<li>Add Examples/Presets</li>
 		    	</ul>
 		    </div>
@@ -116,8 +110,8 @@
 	<div class="scanner__controls d-all">
 		<div class="g-1of2">
 			<input type="file" id="img_upload" class="fileinput">
-			<label for="img_upload" class="button">Choose a file</label>
-			<div id="start_scan" class="button">Start Scan</div>
+			<label for="img_upload" class="button" id="choose-file">Choose a file</label>
+			<div id="start_scan" class="button" id="start-scan">Start Scan</div>
 		</div>
 		<div class="g-1of2">
 			<!-- <div class="button">Preview Fullsize</div> -->
@@ -378,6 +372,8 @@
 </nav>
 		
 	</main>
+	
+	<!-- <div class="tutorial-overlay"></div> -->
 
 	<div class="popup-overlay save-popup">
 	<div class="popup-container" >
