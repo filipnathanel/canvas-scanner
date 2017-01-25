@@ -56,7 +56,26 @@ export default class Scanner {
 		this.$scanButton.addEventListener('click', (e) => {this.scanClickHandler(e)});
 		Globals.onResize.add( () => { this.scanArea.redraw() } );
 
+		this.spacebarHandler = this.spacebarHandler.bind(this);
+
 	}
+
+	addSpacebarListener(){
+		document.body.addEventListener('keyup', this.spacebarHandler );
+	}
+
+	removeSpacebarListener(){
+		console.log(this);
+		document.body.removeEventListener('keyup',this.spacebarHandler);
+	}
+
+	spacebarHandler(e){
+		console.log('spacebarHandler called');
+	    if(e.keyCode == 32){
+	        this.requestStop = true;
+	    }
+	}
+
 
 	/**
 	 * a function that handles the imageUpdated Event
@@ -161,11 +180,12 @@ export default class Scanner {
 	scan(){
 
 		this.scanning = true;
+		this.addSpacebarListener();
 		this.$scanner.classList.add('scanner--active');
 
 		let self = this;
 		let start = null;
-		let scansPerFrame = 3;
+		let scansPerFrame = 10;
 
 		// 16.667ms is roughly the framelength
 		let duration = (self.scanArea.canvas.width * 17) / scansPerFrame;
@@ -181,11 +201,19 @@ export default class Scanner {
 				progress = currentStep / self.scanArea.canvas.width;
 
 				if (currentStep > 0){
+					// console.log(currentStep)
 					let scanned = self.scanArea.context.getImageData(currentStep, 0, 1, self.scanArea.canvas.height );
-					self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+					console.log(scanned.data[1000],scanned.data[1001],scanned.data[1002]);
+					if ( window.testowanko ){
+						self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+					} else{
+						self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+					}
 				}
 
+				
 				let change = self.automation.getValueAtPercent(progress);
+				// console.log(change);
 				self.scanArea.moveImage(change.x, change.y, change.rotation);
 
 				currentStep++;
@@ -196,7 +224,12 @@ export default class Scanner {
 			self.indicator.style.left = (progress * 50).toFixed(2) + '%';
 			// increment the step
 
-			if ( progress <= 1 ){
+			
+			if( self.requestStop === true ){
+				self.scanning = false;
+				self.requestStop = false;
+				self.removeSpacebarListener();
+			} else if ( progress <= 1 ){
 				window.requestAnimationFrame(scanLoop);
 			}else{
 				self.scanning = false;

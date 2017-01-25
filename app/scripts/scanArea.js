@@ -62,11 +62,17 @@ export default class ScanArea extends Canvas {
 
 		if(rotation){
 
+
 			this.context.save();
 			var angle = -45 + 90 * rotation,
 				toRadians =  Math.PI/180;
 
-			this.context.translate( (this.canvas.width)/2 + xChange - (this.canvas.width - this.image.width )/2, (this.canvas.height)/2 + yChange - (this.canvas.height - this.image.height )/2 );
+			var xTranslate = Math.round((this.canvas.width)/2 + xChange - (this.canvas.width - this.image.width )/2);
+			var yTranslate = Math.round((this.canvas.height)/2 + yChange - (this.canvas.height - this.image.height )/2);
+
+			console.log(xTranslate);
+			
+			this.context.translate( xTranslate, yTranslate );
 			this.context.rotate(angle * toRadians);
 
 			this.context.drawImage( this.image, -(this.image.width/2) , -(this.image.height/2) );

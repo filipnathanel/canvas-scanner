@@ -216,3 +216,25 @@ export function concatenate(resultConstructor, ...arrays) {
     }
     return result;
 }
+
+/**
+ * This method allows to bypass the Network Error when trying to download
+ * a file set <a> element via a.href = canvas.toDataUrl()
+ * @param  {dataUrl} dataUrl
+ * @return {Blob} a Blob containing the data to Save
+ */
+export function dataUrlToBlob(dataUrl){
+    
+    var arr = dataUrl.split(','), 
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), 
+        n = bstr.length, 
+        u8arr = new Uint8Array(n);
+    
+    while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new Blob([u8arr], {type:mime});
+
+}

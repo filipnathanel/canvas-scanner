@@ -36,7 +36,7 @@ export default class ScanResult extends Canvas {
 
 	download(el, image){
 
-		var blob = this.dataUrlToBlob(image),
+		var blob = utils.dataUrlToBlob(image),
 			objUrl = URL.createObjectURL(blob);
 
 		el.download = 'glitch_scanned.png';
@@ -105,28 +105,6 @@ export default class ScanResult extends Canvas {
 		tempContext.putImageData(trimmed, 0, 0);
 
 		return tempCanvas.toDataURL();
-
-	}
-
-	/**
-	 * This method allows to bypass the Network Error when trying to download
-	 * a file set <a> element via a.href = canvas.toDataUrl()
-	 * @param  {dataUrl} dataUrl
-	 * @return {Blob} a Blob containing the data to Save
-	 */
-	dataUrlToBlob(dataUrl){
-	    
-	    var arr = dataUrl.split(','), 
-	    	mime = arr[0].match(/:(.*?);/)[1],
-	    	bstr = atob(arr[1]), 
-	    	n = bstr.length, 
-	    	u8arr = new Uint8Array(n);
-	    
-	    while(n--){
-		        u8arr[n] = bstr.charCodeAt(n);
-	    }
-
-	    return new Blob([u8arr], {type:mime});
 
 	}
 

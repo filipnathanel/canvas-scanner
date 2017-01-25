@@ -2,10 +2,11 @@ import Scanner from './scanner';
 import FileInput from './fileInput';
 import loadIcons from './utils/loadIcons';
 import Tutorial from './tutorial/tutorial';
+
 /**
  * This is a main file to scaffold the application
  */
-const testowanko = true;
+// window.testowanko = true;
 
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -14,7 +15,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 	const fileInput = new FileInput('#img_upload');
 		
 	fileInput.onFileChanged.add( ( file ) => { 
-		console.log(file);
 		glitchScanner.addFile(file) 
 	});
 	fileInput.onWrongFileType.add( ( result ) => { alert( result.type + ' is not allowed file type, try jpeg or png');});
@@ -30,13 +30,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 window.addEventListener('load', () => {
 
-	if(testowanko){
+	if(window.testowanko){
+
+		window.glitchScanner.addFile({file: new SampleImage () })
 
 		setTimeout( () => {
 
-			window.glitchScanner.addFile({file: new File ( ) })
+			window.glitchScanner.scanClickHandler();
 
-		}, 100);
+		}, 300);
 
 	}
 });

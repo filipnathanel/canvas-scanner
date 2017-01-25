@@ -16,6 +16,12 @@ export default class Automation {
 		this.xController = new XYController('#x-controller', {
 			invert: true
 		});
+
+		if (window.testowanko){
+			this.xController.pathData.addPoint(0, 100, 'quadratic', 15, 'start');
+			this.xController.pathData.addPoint(50, 20, 'quadratic', 0, 'start');
+		}
+
 		this.yController = new XYController('#y-controller');
 		this.rotationController = new XYController('#rotation-controller');
 
