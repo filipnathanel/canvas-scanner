@@ -2,11 +2,12 @@ import Scanner from './scanner';
 import FileInput from './fileInput';
 import loadIcons from './utils/loadIcons';
 import Tutorial from './tutorial/tutorial';
+import SampleImage from './SampleImage';
 
 /**
  * This is a main file to scaffold the application
  */
-// window.testowanko = true;
+window.testowanko = true;
 
 
 document.addEventListener('DOMContentLoaded', ()=>{
@@ -32,13 +33,19 @@ window.addEventListener('load', () => {
 
 	if(window.testowanko){
 
-		window.glitchScanner.addFile({file: new SampleImage () })
+		const testImage = new SampleImage()
+		.then( image => {
 
-		setTimeout( () => {
+			window.glitchScanner.addImageToScanner( image );
 
-			window.glitchScanner.scanClickHandler();
+			setTimeout( () => {
 
-		}, 300);
+				window.glitchScanner.scanClickHandler();
+
+			}, 300);
+
+		});
+
 
 	}
 });

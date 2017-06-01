@@ -11,6 +11,7 @@ const reload = browserSync.reload;
 
 gulp.task('styles', () => {
   return gulp.src('app/styles/*.scss')
+  /*
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.sass.sync({
@@ -22,6 +23,7 @@ gulp.task('styles', () => {
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest('.tmp/styles'))
     .pipe(reload({stream: true}));
+  */
 });
 
 gulp.task('scripts', () => {

@@ -96,16 +96,19 @@ export default class Scanner {
 			this.scanArea.context.clearRect(0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height);
 
 			// Asynchonously transform the File into Image
-			this.loadFile(file).then( (image) => {
-
-				this.image = image;
-
-				this.rescaleScanAreas(image);
-
-				this.scanArea.drawImage(image);
-			});
+			this.loadFile(file).then( this.addImageToScanner.bind(this) );
 
 		}
+
+	}
+
+	addImageToScanner (image){
+
+		this.image = image;
+
+		this.rescaleScanAreas(image);
+
+		this.scanArea.drawImage(image);
 
 	}
 
@@ -177,63 +180,111 @@ export default class Scanner {
 
 	}
 
+	wtfScan(){
+
+		var start = performance.now();
+		var mainScan = this.scanArea.context.getImageData( 0, 0, this.scanArea.canvas.width, this.scanArea.canvas.height ) ;
+		var pixels = mainScan.data;
+
+		var xMax = mainScan.width;
+		var yMax = mainScan.height;
+		var lenn = pixels.length;
+
+		var transformedPixels = [];
+
+		// loop enough times to represent whole image
+		for( var i = 0; i < xMax ; i++){
+
+			// rownanie ogólne funkcji
+			//  f(x) = ax + b
+			// var xChange = xVal ? (this.canvas.width - this.image.width ) * xVal : (this.canvas.width - this.image.width) / 2 ,
+			var progress = i / xMax ;
+
+			// zlupuj row
+			// for (var j = 0; j < lenn; j+= yMax){
+			// 	// transformedPixels.push(pixels[j+i]);
+			// 	transformedPixels[transformedPixels.length] = (pixels[j+i]);
+			// }
+
+			// console.log(progress)
+			var change = this.automation.getValueAtPercent(progress);
+
+			// var wartoscX = i * change.x;
+
+			var angle = Math.round((-45 + 90 * change.rotation) * 100) / 100 ;
+			// console.log('angle: ' + angle)
+			var wspolczynnik = Math.tan(angle);
+
+			console.log(wspolczynnik);
+
+
+			// var rezultat = wspolczynnik * wartoscX;
+
+		}
+		// console.log(transformedPixels);
+
+		var end = performance.now();
+		var duration = end - start;
+
+	}
+
+
 	scan(){
 
 		this.scanning = true;
 		this.addSpacebarListener();
 		this.$scanner.classList.add('scanner--active');
 
-		let self = this;
 		let start = null;
 		let scansPerFrame = 10;
 
 		// 16.667ms is roughly the framelength
-		let duration = (self.scanArea.canvas.width * 17) / scansPerFrame;
+		let duration = (this.scanArea.canvas.width * 17) / scansPerFrame;
 		let progress = 0;
 
 		let currentStep = 0;
 		let newStep = 0;
 
-		function scanLoop(timestamp){
+		const scanLoop = (timestamp) => {
 			
 			for (let i = 0; i < scansPerFrame; i++) {
 
-				progress = currentStep / self.scanArea.canvas.width;
+				progress = currentStep / this.scanArea.canvas.width;
 
 				if (currentStep > 0){
 					// console.log(currentStep)
-					let scanned = self.scanArea.context.getImageData(currentStep, 0, 1, self.scanArea.canvas.height );
+					let scanned = this.scanArea.context.getImageData(currentStep, 0, 1, this.scanArea.canvas.height );
 					console.log(scanned.data[1000],scanned.data[1001],scanned.data[1002]);
 					if ( window.testowanko ){
-						self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+						this.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
 					} else{
-						self.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
+						this.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
 					}
 				}
 
 				
-				let change = self.automation.getValueAtPercent(progress);
+				let change = this.automation.getValueAtPercent(progress);
 				// console.log(change);
-				self.scanArea.moveImage(change.x, change.y, change.rotation);
+				this.scanArea.moveImage(change.x, change.y, change.rotation);
 
 				currentStep++;
 			}
 
 
 			// need to experiment with transform translate px val to see wheter it's better performant
-			self.indicator.style.left = (progress * 50).toFixed(2) + '%';
+			this.indicator.style.left = (progress * 50).toFixed(2) + '%';
 			// increment the step
 
 			
-			if( self.requestStop === true ){
-				self.scanning = false;
-				self.requestStop = false;
-				self.removeSpacebarListener();
+			if( this.requestStop === true ){
+				this.scanning = false;
+				this.requestStop = false;
+				this.removeSpacebarListener();
 			} else if ( progress <= 1 ){
 				window.requestAnimationFrame(scanLoop);
 			}else{
-				self.scanning = false;
-				self.$scanner.classList.remove('scanner--active');
+				this.scanning = false;
+				this.$scanner.classList.remove('scanner--active');
 			}
 
 		}
