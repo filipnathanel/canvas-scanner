@@ -5,10 +5,9 @@ import ScanArea from './scanArea';
 import ScanResult from './scanResult';
 
 import Automation from './automation';
-import XYController from './xyController/xyController';
 
 /**
- * This is the main Scanner class 
+ * This is the main Scanner class
  * it initalises it's dependencies and contains the actual scan algorithm
  */
 export default class Scanner {
@@ -254,7 +253,6 @@ export default class Scanner {
 				if (currentStep > 0){
 					// console.log(currentStep)
 					let scanned = this.scanArea.context.getImageData(currentStep, 0, 1, this.scanArea.canvas.height );
-					console.log(scanned.data[1000],scanned.data[1001],scanned.data[1002]);
 					if ( window.testowanko ){
 						this.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
 					} else{

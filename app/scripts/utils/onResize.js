@@ -3,28 +3,30 @@ import EventQueue from './eventQueue';
 
 export default class onResize extends EventQueue {
 
-  constructor(){
+	constructor() {
 
-    super();
-    this.throttleTime = 200;
+		super();
 
-    this.listener();
+		this.throttleTime = 200;
 
-  }
+		this.listener();
 
-  listener(){
+	}
 
-    window.addEventListener('resize', () => {
+	listener() {
 
-      // throttle the events
-      utils.waitForFinalEvent( () => {
+		window.addEventListener( 'resize', () => {
 
-        this.run();
+			// throttle the events
+			utils.waitForFinalEvent( () => {
 
-      }, this.throttleTime, "resizerFunc"); 
+				this.run();
 
-    });
+			}, this.throttleTime, 'resizerFunc' );
+
+		} );
 
 
-  }
+	}
+
 }

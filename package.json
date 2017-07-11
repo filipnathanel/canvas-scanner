@@ -1,9 +1,9 @@
 {
-  "name":"glitch-scanner",
-  "version":"0.7.0",
-  "description":"A canvas based scanner emulation for producing glitched art",
-  "homepage":"http://glitchscanner.com",
-  "license" : "MIT",
+  "name": "glitch-scanner",
+  "version": "0.7.0",
+  "description": "A canvas based scanner emulation for producing glitched art",
+  "homepage": "http://glitchscanner.com",
+  "license": "MIT",
   "private": false,
   "engines": {
     "node": ">=4"
@@ -15,6 +15,9 @@
     "babel-register": "^6.11.6",
     "browser-sync": "^2.14.0",
     "del": "^2.2.1",
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb-base": "^11.2.0",
+    "eslint-plugin-import": "^2.2.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-babel": "^6.1.2",
@@ -36,18 +39,5 @@
     "main-bower-files": "^2.13.1",
     "webpack-stream": "^3.2.0",
     "wiredep": "^4.0.0"
-  },
-  "eslintConfig": {
-    "env": {
-      "es6": true,
-      "node": true,
-      "browser": true
-    },
-    "rules": {
-      "quotes": [
-        2,
-        "single"
-      ]
-    }
   }
 }
