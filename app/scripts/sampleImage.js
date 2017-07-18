@@ -1,11 +1,6 @@
-import * as utils from './utils/utils';
-import Ajax from './utils/ajax';
-
-const dataHandler = new Ajax();
-
 export default class SampleImage {
 
-	constructor(){
+	constructor() {
 
 		return new Promise( resolve => {
 
@@ -13,12 +8,12 @@ export default class SampleImage {
 
 			testImage.onload = () => {
 
-				resolve(testImage);
-				
-			}
+				resolve( testImage );
+
+			};
 
 			testImage.src = 'images/test_image.jpg';
-			
+
 		} );
 
 
@@ -38,11 +33,16 @@ export default class SampleImage {
 
 	}
 
-	onImageLoaded(e){
+	onImageLoaded( e ) {
+
+		console.log(e);
+
 	}
 
-	dataUrl(){
+	dataUrl() {
+
 		return '';
+
 	}
 }
 

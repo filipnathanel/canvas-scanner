@@ -1,29 +1,33 @@
 import SVGElement from './svgElement';
 
 export default class Path extends SVGElement {
-	
-	constructor(options, $svg, prepend){
+
+	constructor( options, $svg, prepend ) {
 
 		super();
 
 		this.defaults = {
-			name:'path'
-		}
-
-		this.attributes = {
-			'stroke': '#000',
-			'stroke-width': 1,
-			'fill': 'none'
+			name: 'path'
 		};
 
-		this.init(options);
+		this.attributes = {
+			stroke: '#000',
+			'stroke-width': 1,
+			fill: 'none'
+		};
 
-		if ($svg){
+		this.init( options );
 
-			if(prepend && $svg.childNodes.length > 0){
-				$svg.insertBefore(this.el, $svg.childNodes[0]);
-			}else{
-				$svg.appendChild(this.el);
+		if ( $svg ) {
+
+			if ( prepend && $svg.childNodes.length > 0 ) {
+
+				$svg.insertBefore( this.el, $svg.childNodes[0] );
+
+			} else {
+
+				$svg.appendChild( this.el );
+
 			}
 
 		}

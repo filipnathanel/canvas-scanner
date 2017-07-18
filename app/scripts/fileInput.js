@@ -6,10 +6,10 @@ import * as utils from './utils/utils';
  */
 
 export default class FileInput {
-	
-	constructor(inputEl){
 
-		this.$el = utils.getEl(inputEl);
+	constructor( inputEl ) {
+
+		this.$el = utils.getEl( inputEl );
 		this.onFileChanged = new EventQueue();
 		this.onWrongFileType = new EventQueue();
 
@@ -17,15 +17,15 @@ export default class FileInput {
 			'image/jpeg',
 			'image/png',
 			'image/svg+xml'
-		]
+		];
 
 		this.initEvents();
 
 	}
 
-	initEvents(){
+	initEvents() {
 
-		this.$el.addEventListener('change', this.fileChangeHandler.bind(this) );
+		this.$el.addEventListener( 'change', this.fileChangeHandler.bind( this ) );
 
 	}
 
@@ -36,33 +36,46 @@ export default class FileInput {
 	 *
 	 * @todo allow multiple file handling
 	 */
-	fileChangeHandler(e){
+	fileChangeHandler( e ) {
 
-		var file = this.$el.files[0];
+		const file = this.$el.files[0];
 
-		if( this.isFileAllowed(file) ){
-			this.onFileChanged.run({ file: file }) ;
-		}else{
-			this.onWrongFileType.run({ type: this.getFileType(file)} );
+		if ( this.isFileAllowed( file ) ) {
+
+			this.onFileChanged.run( { file } );
+
+		} else {
+
+			this.onWrongFileType.run( { type: this.getFileType( file ) } );
+
 		}
 
 	}
 
-	getFileType(file){
-		if( file.type.length === 0){
-			var nameType = file.name.substr(file.name.lastIndexOf('.') + 1);
+	getFileType( file ) {
+
+		if ( file.type.length === 0 ) {
+
+			const nameType = file.name.substr( file.name.lastIndexOf( '.' ) + 1 );
 			return nameType;
-		}else{
-			return file.type;
+
 		}
+
+		return file.type;
+
 	}
 
-	isFileAllowed(file){
+	isFileAllowed( file ) {
 
-		for( let allowedType of this.allowedFileTypes ){
+		for ( const allowedType of this.allowedFileTypes ) {
 
-			if (allowedType === this.getFileType(file) || allowedType.indexOf(this.getFileType(file)) >= 0){
+			const fileType = this.getFileType( file );
+			const isTypeinAllowedArray = allowedType.indexOf( this.getFileType( file ) ) >= 0;
+
+			if ( allowedType === fileType || isTypeinAllowedArray ) {
+
 				return true;
+
 			}
 
 		}
