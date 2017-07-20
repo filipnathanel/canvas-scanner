@@ -7,7 +7,7 @@ import SampleImage from './SampleImage';
 /**
  * This is a main file to scaffold the application
  */
-window.testowanko = true;
+window.testOn = true;
 
 document.addEventListener( 'DOMContentLoaded', () => {
 
@@ -18,7 +18,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		window.glitchScanner.addFile( file );
 
-	});
+	} );
 
 	fileInput.onWrongFileType.add( ( result ) => {
 
@@ -34,7 +34,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 window.addEventListener( 'load', () => {
 
-	if ( window.testowanko ) {
+	if ( window.testOn ) {
 
 		const testImage = new SampleImage().then( image => {
 

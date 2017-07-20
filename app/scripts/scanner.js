@@ -299,7 +299,7 @@ export default class Scanner {
 
 					const scanned = this.scanArea.context.getImageData( currentStep, 0, 1, this.scanArea.canvas.height );
 
-					if ( window.testowanko ) {
+					if ( window.testOn ) {
 
 						this.scanResult.context.putImageData( scanned, currentStep, 0, 0, 0, scanned.width, scanned.height );
 

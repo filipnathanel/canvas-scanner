@@ -16,7 +16,7 @@ export default class Automation {
 			invert: true
 		} );
 
-		if ( window.testowanko ) {
+		if ( window.testOn ) {
 
 			this.xController.pathData.addPoint( 0, 100, 'quadratic', 15, 'start' );
 			this.xController.pathData.addPoint( 50, 20, 'quadratic', 0, 'start' );
