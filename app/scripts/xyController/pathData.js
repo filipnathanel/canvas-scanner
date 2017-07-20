@@ -188,6 +188,7 @@ export default class PathData {
 			}
 
 		}
+
 	}
 
 	removePaths() {

@@ -16,33 +16,6 @@ export default class SampleImage {
 
 		} );
 
-
-		// var parts = [ 
-		// 	utils.dataUrlToBlob( this.dataUrl() ),
-		// ]
-		// var file = new File(
-		// 	parts,
-		// 	'ryjek.png',
-		// 	{			
-		// 		lastModified : new Date(),
-		// 		type: 'image/png'
-		// 	}
-		// )
-
-		// return file;
-
 	}
 
-	onImageLoaded( e ) {
-
-		console.log(e);
-
-	}
-
-	dataUrl() {
-
-		return '';
-
-	}
 }
-

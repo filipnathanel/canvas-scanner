@@ -36,8 +36,7 @@ window.addEventListener( 'load', () => {
 
 	if ( window.testowanko ) {
 
-		const testImage = new SampleImage()
-		.then( image => {
+		const testImage = new SampleImage().then( image => {
 
 			window.glitchScanner.addImageToScanner( image );
 
@@ -48,7 +47,6 @@ window.addEventListener( 'load', () => {
 			}, 300 );
 
 		} );
-
 
 	}
 

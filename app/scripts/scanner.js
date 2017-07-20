@@ -345,12 +345,6 @@ export default class Scanner {
 
 		window.requestAnimationFrame( scanLoop );
 
-		// one of the ways to approach it is to scan every pixel and the other to scan in batches.
-		// everypixel approach would be time independent and reliant only on comp performance,
-		// whereas the batch approach would need to scan 1 px fer animation Frame 
-		// therefore would limit our speed to ~60px per second.
-		// I wil first go with the 1 px approach as it seems more bulletproof.
-
 	}
 
 	setDPI( dpi ) {
